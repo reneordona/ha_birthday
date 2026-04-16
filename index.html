@@ -318,21 +318,22 @@
 
   .month-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 12px 24px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px 28px;
     overflow: hidden;
   }
 
   .month-item {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 18px;
+    gap: 16px;
+    padding: 14px 20px;
     background: rgba(255,255,255,0.06);
     border-radius: 14px;
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     animation: popIn 0.5s ease-out both;
+    position: relative;
   }
 
   @keyframes popIn {
@@ -340,7 +341,36 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  .month-item.past { opacity: 0.4; }
+  .month-item.past { opacity: 0.45; }
+
+  /* Today highlight — glowing ring, bumped scale, animated shimmer */
+  .month-item.today {
+    background: linear-gradient(135deg, rgba(255,110,199,0.22), rgba(255,217,61,0.18));
+    border: 2px solid var(--yellow, #ffd93d);
+    box-shadow: 0 0 24px rgba(255,217,61,0.35), 0 0 40px rgba(255,110,199,0.25);
+    transform: scale(1.02);
+    animation: popIn 0.5s ease-out both, todayGlow 2.8s ease-in-out infinite;
+  }
+
+  @keyframes todayGlow {
+    0%, 100% { box-shadow: 0 0 24px rgba(255,217,61,0.35), 0 0 40px rgba(255,110,199,0.25); }
+    50%      { box-shadow: 0 0 32px rgba(255,217,61,0.55), 0 0 55px rgba(255,110,199,0.4); }
+  }
+
+  .today-flag {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: linear-gradient(135deg, #ff6ec7, #ffd93d);
+    color: #2a1a4a;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  }
 
   .month-item-date {
     background: linear-gradient(135deg, var(--main), var(--purple));
@@ -358,6 +388,12 @@
     flex-shrink: 0;
   }
 
+  .month-item.today .month-item-date {
+    background: linear-gradient(135deg, #ff6ec7, #ffd93d);
+    color: #2a1a4a;
+    box-shadow: 0 4px 14px rgba(255,110,199,0.45);
+  }
+
   .month-item.past .month-item-date {
     background: linear-gradient(135deg, #556, #667);
     box-shadow: none;
@@ -370,10 +406,19 @@
     color: var(--text);
   }
 
+  .month-item.today .month-item-name {
+    font-weight: 600;
+  }
+
   .month-item-emoji {
     margin-left: auto;
     font-size: 1.4rem;
     opacity: 0.9;
+  }
+
+  .month-item.today .month-item-emoji {
+    font-size: 1.7rem;
+    animation: bob 2s ease-in-out infinite;
   }
 
   .no-birthdays {
@@ -587,52 +632,31 @@
   }
 
   function renderBirthdays(entries, currentDay) {
-    const today = entries.filter(e => e.day === currentDay);
-    const rest = entries.filter(e => e.day !== currentDay);
-
     let html = '';
-
-    html += `<section class="today-section">`;
-    if (today.length > 0) {
-      html += `<div class="today-banner">`;
-      html += `<div class="today-header">`;
-      html += `<span class="cake-icon">🎂</span>`;
-      html += `<h1 class="today-title">Happy Birthday!</h1>`;
-      html += `</div>`;
-      html += `<div class="today-names">`;
-      today.forEach(e => {
-        html += `<div class="today-name">${escapeHtml(e.name)}</div>`;
-      });
-      html += `</div>`;
-      html += `</div>`;
-    } else {
-      html += `<div class="no-today-banner">`;
-      html += `<span class="icon">🎈</span>`;
-      html += `<span class="text">No birthdays today — but plenty to celebrate this month!</span>`;
-      html += `</div>`;
-    }
-    html += `</section>`;
 
     html += `<section class="month-section">`;
     html += `<div class="month-header">`;
     html += `<span class="emoji">🎁</span>`;
-    html += `<span class="month-title">Coming Up This Month</span>`;
+    html += `<span class="month-title">Birthdays This Month</span>`;
     html += `<span class="divider"></span>`;
     html += `</div>`;
 
-    if (rest.length === 0 && today.length === 0) {
+    if (entries.length === 0) {
       html += `<div class="no-birthdays">No birthdays on the calendar this month ✨</div>`;
-    } else if (rest.length === 0) {
-      html += `<div class="no-birthdays">That's everyone this month! 🎉</div>`;
     } else {
       html += `<div class="month-list">`;
-      rest.forEach((e, i) => {
+      entries.forEach((e, i) => {
+        const isToday = e.day === currentDay;
         const past = e.day < currentDay;
         const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
-        html += `<div class="month-item ${past ? 'past' : ''}" style="animation-delay:${i * 0.05}s">`;
+        const classes = ['month-item'];
+        if (isToday) classes.push('today');
+        else if (past) classes.push('past');
+        html += `<div class="${classes.join(' ')}" style="animation-delay:${i * 0.05}s">`;
+        if (isToday) html += `<span class="today-flag">TODAY</span>`;
         html += `<span class="month-item-date">${e.day}</span>`;
         html += `<span class="month-item-name">${escapeHtml(e.name)}</span>`;
-        html += `<span class="month-item-emoji">${emoji}</span>`;
+        html += `<span class="month-item-emoji">${isToday ? '🎂' : emoji}</span>`;
         html += `</div>`;
       });
       html += `</div>`;
