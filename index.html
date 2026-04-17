@@ -657,61 +657,20 @@
       ? '1 birthday this month'
       : `${entries.length} birthdays this month`;
 
-    // Measure available space so polaroids always fit without clipping.
-    // We calculate how many columns × rows are needed, then pick the largest
-    // card width where (rows * card-height + gaps) fits the viewport height.
-    const mainEl = document.getElementById('main');
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-
-    // Reserve vertical space for: body padding (60px), header (~110px),
-    // card-wall padding (40px), and ~140px total safety (70px top + 70px
-    // bottom) so the today-card's glow halo is never clipped by the viewport.
-    const availableH = viewportH - 350;
-    // Horizontal: body padding (120px) + card-wall padding (60px) + 80px
-    // safety so the today glow doesn't clip on wide cards at the edges
-    const availableW = viewportW - 260;
-
+    // Sizing strategy: pick a reasonable starting tier based on count,
+    // render the cards, then measure the actual rendered wall and scale
+    // it down with transform if it's larger than the available viewport.
+    // This is foolproof because we measure actual DOM instead of guessing.
     const n = entries.length;
-
-    // Candidate sizes from largest to smallest. Each entry is:
-    // [cardW, gap, photoH, dayFs(rem), captionFs(rem)]
-    const sizeTiers = [
-      [300, 36, 185, 5.8, 2.15],
-      [270, 32, 170, 5.2, 2.0 ],
-      [240, 28, 150, 4.8, 1.85],
-      [215, 24, 135, 4.3, 1.7 ],
-      [195, 22, 120, 3.9, 1.55],
-      [175, 20, 105, 3.4, 1.4 ],
-      [160, 18,  95, 3.1, 1.3 ],
-      [145, 16,  85, 2.8, 1.2 ],
-      [130, 14,  75, 2.5, 1.1 ],
-      [115, 12,  65, 2.2, 1.0 ],
-    ];
-
-    // Approximate full card height: tape(12) + padding(30) + photo + caption(~1.2x fs in px) + bureau(~14) + gap-breathing
-    // fs rem → px: assume 16px base; today card is ~1.25x taller
-    let chosen = sizeTiers[sizeTiers.length - 1];
-    for (const tier of sizeTiers) {
-      const [cardW, gap, photoH, , captionFs] = tier;
-      const captionPx = captionFs * 16 * 1.2;
-      const cardH = 30 /*padding*/ + photoH + captionPx + 14 /*bureau*/ + 12 /*misc*/;
-
-      // Today card takes 1.5 card-widths horizontally
-      const hasToday = entries.some(e => e.day === currentDay);
-      const effectiveCardsForCols = hasToday ? n + 0.5 : n; // today ≈ 1.5 cards wide
-
-      const cols = Math.max(1, Math.floor((availableW + gap) / (cardW + gap)));
-      const rows = Math.ceil(effectiveCardsForCols / cols);
-      const totalH = rows * cardH + (rows - 1) * gap;
-
-      if (totalH <= availableH) {
-        chosen = tier;
-        break;
-      }
-    }
-
-    const [cardW, gap, photoH, dayFs, captionFs] = chosen;
+    let cardW, gap, photoH, dayFs, captionFs;
+    if (n <= 3)       { cardW = 300; gap = 36; photoH = 185; dayFs = 5.8; captionFs = 2.15; }
+    else if (n <= 6)  { cardW = 270; gap = 32; photoH = 170; dayFs = 5.2; captionFs = 2.0; }
+    else if (n <= 9)  { cardW = 240; gap = 28; photoH = 150; dayFs = 4.8; captionFs = 1.85; }
+    else if (n <= 12) { cardW = 220; gap = 26; photoH = 135; dayFs = 4.4; captionFs = 1.7;  }
+    else if (n <= 16) { cardW = 200; gap = 22; photoH = 120; dayFs = 4.0; captionFs = 1.55; }
+    else if (n <= 20) { cardW = 180; gap = 20; photoH = 108; dayFs = 3.6; captionFs = 1.4;  }
+    else if (n <= 28) { cardW = 165; gap = 18; photoH =  98; dayFs = 3.2; captionFs = 1.3;  }
+    else              { cardW = 150; gap = 16; photoH =  88; dayFs = 2.9; captionFs = 1.2;  }
 
     const root = document.documentElement;
     root.style.setProperty('--card-w', cardW + 'px');
@@ -748,6 +707,35 @@
     html += `</div>`;
 
     document.getElementById('main').innerHTML = html;
+
+    // Measure actual rendered wall and scale down if it overflows the
+    // available space. We measure against the <main> container bounds,
+    // which already accounts for the header and body padding. We also
+    // account for the today-card glow halo (~75px on each side) so the
+    // pulse animation never gets clipped.
+    requestAnimationFrame(() => {
+      const mainEl = document.getElementById('main');
+      const wall   = mainEl.querySelector('.card-wall');
+      if (!wall) return;
+
+      // Reset any prior scale so we measure true intrinsic size
+      wall.style.transform = '';
+      wall.style.transformOrigin = 'center center';
+
+      const GLOW_PAD = 75; // space around wall for today-glow halo
+      const availW = mainEl.clientWidth  - GLOW_PAD * 2;
+      const availH = mainEl.clientHeight - GLOW_PAD * 2;
+
+      const wallW = wall.scrollWidth;
+      const wallH = wall.scrollHeight;
+
+      if (wallW <= 0 || wallH <= 0) return;
+
+      const scale = Math.min(1, availW / wallW, availH / wallH);
+      if (scale < 1) {
+        wall.style.transform = `scale(${scale})`;
+      }
+    });
   }
 
   function ordinalSuffix(n) {
