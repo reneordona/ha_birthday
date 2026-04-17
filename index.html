@@ -196,7 +196,7 @@
     align-items: center;
     gap: var(--wall-gap, 28px) var(--wall-gap, 24px);
     padding: 20px 30px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .card {
@@ -665,10 +665,12 @@
     const viewportH = window.innerHeight;
 
     // Reserve vertical space for: body padding (60px), header (~110px),
-    // card-wall padding (40px), and safety margin for the today-glow (40px).
-    const availableH = viewportH - 250;
-    // Horizontal: body padding (120px) + card-wall padding (60px)
-    const availableW = viewportW - 180;
+    // card-wall padding (40px), and ~140px total safety (70px top + 70px
+    // bottom) so the today-card's glow halo is never clipped by the viewport.
+    const availableH = viewportH - 350;
+    // Horizontal: body padding (120px) + card-wall padding (60px) + 80px
+    // safety so the today glow doesn't clip on wide cards at the edges
+    const availableW = viewportW - 260;
 
     const n = entries.length;
 
