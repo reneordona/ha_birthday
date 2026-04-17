@@ -4,37 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthdays This Month</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --main: #05c3de;
-    --secondary: #236092;
-    --text: #FFFFFF;
     --pink: #ff6ec7;
     --yellow: #ffd93d;
     --coral: #ff8e6b;
     --mint: #6bffb8;
     --purple: #b892ff;
+    --sky: #05c3de;
+    --cream: #fff6e0;
+    --ink: #3a1c5c;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
 
   body {
+    /* Warmer, sunset-party background with playful blobs */
     background:
-      radial-gradient(ellipse at top right, rgba(255,110,199,0.22), transparent 55%),
-      radial-gradient(ellipse at bottom left, rgba(255,217,61,0.18), transparent 55%),
-      linear-gradient(135deg, #236092 0%, #1a4a75 50%, #2d7bb8 100%);
-    color: var(--text);
+      radial-gradient(circle at 15% 20%, rgba(255,110,199,0.35) 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(255,217,61,0.30) 0%, transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(184,146,255,0.35) 0%, transparent 45%),
+      radial-gradient(circle at 20% 80%, rgba(107,255,184,0.25) 0%, transparent 45%),
+      linear-gradient(135deg, #4a2885 0%, #7b3fa0 50%, #c44d8e 100%);
+    color: var(--cream);
     font-family: 'Quicksand', sans-serif;
     min-height: 100vh;
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 40px 60px 50px;
+    padding: 40px 60px;
   }
 
-  /* ===== Confetti ===== */
+  /* ---------- Confetti & Balloons (kept) ---------- */
   .confetti {
     position: fixed;
     top: -20px;
@@ -45,12 +48,12 @@
     animation: fall linear infinite;
     pointer-events: none;
   }
+
   @keyframes fall {
     0% { transform: translateY(-20px) rotate(0deg); }
     100% { transform: translateY(110vh) rotate(720deg); }
   }
 
-  /* ===== Balloons ===== */
   .balloon {
     position: fixed;
     bottom: -200px;
@@ -60,8 +63,9 @@
     z-index: 1;
     animation: float-up linear infinite;
     pointer-events: none;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
   }
+
   .balloon::before {
     content: '';
     position: absolute;
@@ -75,6 +79,7 @@
     border-top: 10px solid currentColor;
     opacity: 0.85;
   }
+
   .balloon::after {
     content: '';
     position: absolute;
@@ -84,319 +89,464 @@
     height: 120px;
     background: rgba(255,255,255,0.4);
   }
+
   @keyframes float-up {
-    0%   { transform: translateY(0) translateX(0); }
-    50%  { transform: translateY(-50vh) translateX(20px); }
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-50vh) translateX(20px); }
     100% { transform: translateY(-110vh) translateX(-10px); }
   }
 
-  /* ===== Header ===== */
+  /* ---------- Header: hand-written party banner feel ---------- */
   header {
     position: relative;
-    z-index: 3;
+    z-index: 2;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 20px;
+    align-items: flex-start;
+    margin-bottom: 24px;
     opacity: 0;
-    animation: fadeSlide 0.8s ease-out 0.15s forwards;
+    animation: fadeSlide 0.8s ease-out 0.2s forwards;
   }
 
-  .title-stack { line-height: 1; }
-
-  .eyebrow {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--yellow);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .eyebrow .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--yellow);
-    box-shadow: 0 0 12px var(--yellow);
-  }
-
-  .big-month {
-    font-family: 'Caveat', cursive;
-    font-size: 5.8rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.25);
-    letter-spacing: -0.01em;
-  }
-  .big-month .accent {
-    color: var(--pink);
-    display: inline-block;
-    transform: rotate(-4deg);
-  }
-
-  .header-right {
-    text-align: right;
+  .title-stack {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-  }
-  .year-pill {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.25em;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
-  }
-  .count-pill {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--pink), var(--coral));
-    box-shadow: 0 6px 20px rgba(255,110,199,0.4);
-    color: #fff;
-  }
-  .count-pill .wiggle {
-    display: inline-block;
-    animation: wiggle 2s ease-in-out infinite;
-    margin-right: 6px;
-  }
-  @keyframes wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    75% { transform: rotate(15deg); }
+    gap: 2px;
   }
 
-  /* ===== Main / Card Wall ===== */
+  .kicker {
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    transform: rotate(-2deg);
+    line-height: 1;
+    text-shadow: 0 2px 12px rgba(255,217,61,0.4);
+  }
+
+  .big-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 3.8rem;
+    color: #fff;
+    line-height: 1;
+    text-shadow:
+      0 4px 0 rgba(0,0,0,0.1),
+      0 8px 30px rgba(255,110,199,0.5);
+    letter-spacing: 0.01em;
+  }
+
+  .big-title .accent {
+    color: var(--yellow);
+    display: inline-block;
+    transform: rotate(-3deg);
+  }
+
+  .month-display {
+    text-align: right;
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.12);
+    border: 2px dashed rgba(255,255,255,0.35);
+    border-radius: 20px;
+    transform: rotate(2deg);
+    backdrop-filter: blur(8px);
+  }
+
+  .month-display .month-name {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    line-height: 1;
+  }
+
+  .month-display .year {
+    display: block;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: rgba(255,255,255,0.75);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
   main {
     flex: 1;
     position: relative;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* ---------- Today spotlight: marquee-style banner ---------- */
+  .today-section {
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeSlide 0.8s ease-out 0.4s forwards;
+  }
+
+  .today-banner {
+    background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 50%, #ff8e6b 100%);
+    border-radius: 28px;
+    padding: 26px 36px;
+    position: relative;
+    box-shadow:
+      0 14px 50px rgba(255,110,199,0.5),
+      0 0 0 6px rgba(255,255,255,0.12),
+      0 0 0 10px rgba(255,110,199,0.25),
+      inset 0 3px 0 rgba(255,255,255,0.35);
+    overflow: hidden;
+    transform: rotate(-0.5deg);
+  }
+
+  .today-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 40%);
+    animation: shimmer 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* Decorative dots like a party banner */
+  .today-banner::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.6) 2px, transparent 2.5px);
+    background-size: 20px 8px;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(25%, 25%); }
+  }
+
+  .today-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cake-icon {
+    font-size: 3.2rem;
+    animation: bounce 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) scale(1) rotate(-5deg); }
+    25% { transform: translateY(-4px) scale(1.02) rotate(0deg); }
+    50% { transform: translateY(-10px) scale(1.08) rotate(5deg); }
+    75% { transform: translateY(-4px) scale(1.02) rotate(0deg); }
+  }
+
+  .today-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4);
+    line-height: 1;
+  }
+
+  .today-names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .today-name {
+    background: rgba(255,255,255,0.97);
+    border-radius: 18px;
+    padding: 14px 28px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--ink);
+    box-shadow:
+      0 8px 18px rgba(0,0,0,0.18),
+      inset 0 -3px 0 rgba(0,0,0,0.05);
+    transform: rotate(-2deg);
+    position: relative;
+  }
+
+  .today-name::before {
+    content: '✨';
+    position: absolute;
+    top: -12px;
+    right: -8px;
+    font-size: 1.4rem;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .today-name:nth-child(even) { transform: rotate(2deg); }
+  .today-name:nth-child(3n) { transform: rotate(-3deg); }
+  .today-name:nth-child(3n) ::before { content: '🎉'; }
+
+  @keyframes twinkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.3) rotate(20deg); opacity: 0.7; }
+  }
+
+  /* ---------- Month list: scrapbook scatter instead of a grid ---------- */
+  .month-section {
+    flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-  }
-
-  .card-wall {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 28px 24px;
-    align-content: center;
-    padding: 30px 20px 10px;
-    overflow: hidden;
-  }
-
-  /* ----- Polaroid Card ----- */
-  .card {
-    --tilt: -2deg;
-    --accent: var(--pink);
-    background: #fff;
-    border-radius: 10px;
-    padding: 14px 14px 16px;
-    box-shadow:
-      0 12px 28px rgba(0,0,0,0.28),
-      0 4px 8px rgba(0,0,0,0.18);
-    transform: rotate(var(--tilt));
-    position: relative;
-    color: #1f1f35;
     opacity: 0;
-    animation: popIn 0.55s ease-out forwards;
+    animation: fadeSlide 0.8s ease-out 0.6s forwards;
+  }
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .month-header .emoji { font-size: 1.8rem; }
+
+  .month-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: 0.02em;
+    transform: rotate(-1deg);
+  }
+
+  .month-header .divider {
+    flex: 1;
+    height: 3px;
+    background-image: radial-gradient(circle, var(--yellow) 1.5px, transparent 2px);
+    background-size: 14px 3px;
+    background-repeat: repeat-x;
+    opacity: 0.5;
+  }
+
+  .month-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px 20px;
+    overflow: hidden;
+    padding: 8px 4px;
+  }
+
+  /* Party card — sticky-note vibe with playful rotation */
+  .month-item {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: rotate(var(--tilt)) scale(0.85) translateY(14px); }
-    to   { opacity: 1; transform: rotate(var(--tilt)) scale(1)    translateY(0); }
+    align-items: flex-start;
+    gap: 10px;
+    padding: 18px 20px 20px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.98), rgba(255,246,224,0.95));
+    border-radius: 18px;
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.2),
+      0 0 0 1px rgba(255,255,255,0.3);
+    animation: popIn 0.5s ease-out both;
+    position: relative;
+    color: var(--ink);
+    min-height: 120px;
   }
 
-  /* Tape strip at the top of each polaroid */
-  .card::before {
+  /* Alternating playful rotations — scrapbook feel */
+  .month-item:nth-child(4n+1) { transform: rotate(-1.5deg); }
+  .month-item:nth-child(4n+2) { transform: rotate(1deg); }
+  .month-item:nth-child(4n+3) { transform: rotate(-0.5deg); }
+  .month-item:nth-child(4n+4) { transform: rotate(2deg); }
+
+  /* Card variants — different pastel backgrounds like a mix of party invites */
+  .month-item:nth-child(5n+1) {
+    background: linear-gradient(160deg, #fff6e0, #ffe8a3);
+  }
+  .month-item:nth-child(5n+2) {
+    background: linear-gradient(160deg, #ffe4f0, #ffc4dd);
+  }
+  .month-item:nth-child(5n+3) {
+    background: linear-gradient(160deg, #e4f9ff, #b3ecf7);
+  }
+  .month-item:nth-child(5n+4) {
+    background: linear-gradient(160deg, #eaffea, #b9f5c9);
+  }
+  .month-item:nth-child(5n+5) {
+    background: linear-gradient(160deg, #f3e8ff, #dcc4ff);
+  }
+
+  /* Little tape strip at the top of each card */
+  .month-item::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -8px;
     left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 90px;
-    height: 24px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.55) 0%,
-      rgba(255,255,255,0.25) 100%
-    );
-    border-left: 1px dashed rgba(255,255,255,0.6);
-    border-right: 1px dashed rgba(255,255,255,0.6);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    transform: translateX(-50%) rotate(-2deg);
+    width: 60px;
+    height: 18px;
+    background: rgba(255,217,61,0.6);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .month-item:nth-child(even)::before {
+    background: rgba(255,110,199,0.55);
+    transform: translateX(-50%) rotate(3deg);
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85) translateY(10px); }
+    to { opacity: 1; }
+  }
+
+  .month-item.past {
+    opacity: 0.5;
+    filter: saturate(0.6);
+  }
+
+  /* Today card gets the biggest, bounciest treatment */
+  .month-item.today {
+    background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 100%) !important;
+    color: #fff;
+    transform: rotate(-2deg) scale(1.05);
+    box-shadow:
+      0 0 30px rgba(255,217,61,0.6),
+      0 0 60px rgba(255,110,199,0.5),
+      0 15px 40px rgba(0,0,0,0.25);
+    animation: popIn 0.5s ease-out both, todayWiggle 3s ease-in-out infinite;
+    z-index: 5;
+  }
+
+  @keyframes todayWiggle {
+    0%, 100% { transform: rotate(-2deg) scale(1.05); }
+    50% { transform: rotate(1deg) scale(1.08); }
+  }
+
+  .today-flag {
+    position: absolute;
+    top: -14px;
+    right: -8px;
+    background: var(--ink);
+    color: var(--yellow);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    padding: 6px 14px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transform: rotate(8deg);
     z-index: 2;
   }
 
-  .card-photo {
-    height: 150px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2, var(--accent)));
-    position: relative;
-    overflow: hidden;
+  .month-item-top {
     display: flex;
     align-items: center;
-    justify-content: center;
-  }
-  .card-photo::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.35), transparent 45%),
-      radial-gradient(circle at 75% 75%, rgba(0,0,0,0.12), transparent 50%);
-    pointer-events: none;
-  }
-  .card-day {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 4.8rem;
-    color: #fff;
-    line-height: 1;
-    text-shadow: 0 4px 14px rgba(0,0,0,0.2);
-    position: relative;
-    z-index: 1;
-  }
-  .card-month-abbr {
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    color: rgba(255,255,255,0.85);
-    text-transform: uppercase;
-    z-index: 1;
-  }
-  .card-emoji {
-    position: absolute;
-    bottom: 8px;
-    right: 10px;
-    font-size: 1.5rem;
-    z-index: 1;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
   }
 
-  .card-caption {
-    font-family: 'Caveat', cursive;
-    font-size: 1.85rem;
+  .month-item-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    font-family: 'Fredoka', sans-serif;
+    padding: 8px 14px;
+    border-radius: 14px;
+    background: rgba(58,28,92,0.1);
+    min-width: 60px;
+  }
+
+  .month-item-date .day-num {
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--ink);
+  }
+
+  .month-item-date .day-suffix {
+    font-size: 0.7rem;
     font-weight: 600;
-    color: #2a2a3f;
-    text-align: center;
-    line-height: 1.1;
-    padding: 0 6px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+
+  .month-item.today .month-item-date {
+    background: rgba(255,255,255,0.95);
+  }
+
+  .month-item.today .month-item-date .day-num,
+  .month-item.today .month-item-date .day-suffix {
+    color: #c44d8e;
+    opacity: 1;
+  }
+
+  .month-item-emoji {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    animation: gentleSway 4s ease-in-out infinite;
+  }
+
+  @keyframes gentleSway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .month-item.today .month-item-emoji {
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+
+  .month-item-name {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    width: 100%;
     word-break: break-word;
   }
 
-  /* Color variants cycled per card */
-  .card.c1 { --accent: #ff6ec7; --accent-2: #ff8e6b; }
-  .card.c2 { --accent: #05c3de; --accent-2: #236092; }
-  .card.c3 { --accent: #b892ff; --accent-2: #6b8dff; }
-  .card.c4 { --accent: #ffd93d; --accent-2: #ff8e6b; }
-  .card.c5 { --accent: #6bffb8; --accent-2: #05c3de; }
-  .card.c6 { --accent: #ff8e6b; --accent-2: #ff6ec7; }
-
-  /* Tilt variants */
-  .card.t1 { --tilt: -2.5deg; }
-  .card.t2 { --tilt:  1.8deg; }
-  .card.t3 { --tilt: -1.2deg; }
-  .card.t4 { --tilt:  2.8deg; }
-  .card.t5 { --tilt: -3deg; }
-  .card.t6 { --tilt:  0.5deg; }
-
-  /* Past birthdays — subtle vintage look */
-  .card.past {
-    opacity: 0.45;
-    filter: grayscale(0.35);
-  }
-
-  /* ---- TODAY card: spotlight, glow, larger ---- */
-  .card.today {
-    --tilt: -1deg;
-    grid-column: span 2;
-    padding: 20px;
-    background: linear-gradient(180deg, #fff 0%, #fff7e6 100%);
-    box-shadow:
-      0 18px 48px rgba(255,217,61,0.35),
-      0 0 0 4px rgba(255,255,255,0.25),
-      0 0 55px rgba(255,110,199,0.4);
-    animation: popIn 0.6s ease-out forwards, todayPulse 3s ease-in-out infinite 0.8s;
-    z-index: 2;
-  }
-  @keyframes todayPulse {
-    0%, 100% {
-      box-shadow: 0 18px 48px rgba(255,217,61,0.35), 0 0 0 4px rgba(255,255,255,0.25), 0 0 55px rgba(255,110,199,0.4);
-    }
-    50% {
-      box-shadow: 0 22px 56px rgba(255,217,61,0.5),  0 0 0 4px rgba(255,255,255,0.3),  0 0 75px rgba(255,110,199,0.6);
-    }
-  }
-  .card.today .card-photo {
-    height: 180px;
-    background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 50%, #ff8e6b 100%);
-  }
-  .card.today .card-day {
-    font-size: 6rem;
-  }
-  .card.today .card-caption {
-    font-size: 2.4rem;
-    color: #1f1f35;
-  }
-  .card.today .card-emoji {
-    font-size: 2.2rem;
-    animation: bob 1.4s ease-in-out infinite;
-  }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0) rotate(-8deg); }
-    50%      { transform: translateY(-6px) rotate(8deg); }
-  }
-
-  .today-ribbon {
-    position: absolute;
-    top: 14px;
-    right: -10px;
-    background: linear-gradient(135deg, #ff6ec7, #ff8e6b);
+  .month-item.today .month-item-name {
     color: #fff;
-    font-family: 'Fredoka', sans-serif;
     font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    padding: 7px 18px 7px 14px;
-    border-radius: 4px 0 0 4px;
-    box-shadow: 0 6px 16px rgba(255,110,199,0.5);
-    z-index: 3;
-  }
-  .today-ribbon::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: -6px;
-    border-top: 6px solid #c94a87;
-    border-right: 6px solid transparent;
+    font-size: 1.7rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
 
-  /* ===== Empty / Error states ===== */
+  /* Empty + error states */
+  .no-birthdays {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8rem;
+    color: var(--yellow);
+    text-align: center;
+    padding: 80px 20px;
+    background: rgba(255,255,255,0.08);
+    border: 3px dashed rgba(255,255,255,0.3);
+    border-radius: 24px;
+    transform: rotate(-0.5deg);
+  }
+
   .state-message {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Caveat', cursive;
-    font-size: 2.2rem;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8rem;
     color: rgba(255,255,255,0.85);
     text-align: center;
     padding: 40px;
@@ -404,39 +554,28 @@
 
   @keyframes fadeSlide {
     from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ===== Responsive ===== */
-  @media (max-width: 1100px) {
-    body { padding: 30px 40px; }
-    .big-month { font-size: 4.5rem; }
-    .card.today { grid-column: span 2; }
-  }
-  @media (max-width: 700px) {
-    body { padding: 24px 24px 30px; }
-    header { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .header-right { align-items: flex-start; text-align: left; }
-    .big-month { font-size: 3.6rem; }
-    .card-wall { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 22px 16px; }
-    .card.today { grid-column: 1 / -1; }
-    .card-day { font-size: 3.8rem; }
-    .card-caption { font-size: 1.5rem; }
+  @media (max-width: 900px) {
+    body { padding: 24px 24px; }
+    .big-title { font-size: 2.5rem; }
+    .today-title { font-size: 2rem; }
+    .today-name { font-size: 1.4rem; padding: 10px 20px; }
+    .month-list { grid-template-columns: 1fr; }
+    .month-display .month-name { font-size: 1.4rem; }
   }
 </style>
 </head>
 <body>
   <header>
     <div class="title-stack">
-      <div class="eyebrow"><span class="dot"></span>Let's Celebrate</div>
-      <div class="big-month">
-        <span id="month-label">Month</span>
-        <span class="accent">Birthdays!</span>
-      </div>
+      <div class="kicker">let's celebrate 🎉</div>
+      <div class="big-title">Birthday <span class="accent">Bash!</span></div>
     </div>
-    <div class="header-right">
-      <div class="count-pill"><span class="wiggle">🎉</span><span id="count-text">— celebrating this month</span></div>
-      <div class="year-pill" id="year-label">2026</div>
+    <div class="month-display">
+      <span class="month-name" id="month-label">Month</span>
+      <span class="year" id="year-label">2026</span>
     </div>
   </header>
 
@@ -461,10 +600,10 @@
   const REFRESH_HOURS = 6;
 
   const CONFETTI_COLORS = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
-  const BALLOON_COLORS  = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
-  const BIRTHDAY_EMOJIS = ['🎂','🎁','🎈','🎊','🥳','🧁','🍰','⭐','✨','🎀'];
+  const BALLOON_COLORS = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
+  const BIRTHDAY_EMOJIS = ['🎂','🎁','🎈','🎊','🥳','🧁','🍰','⭐','✨','🎀','🎉','🍾'];
 
-  function makeConfetti(count = 40) {
+  function makeConfetti(count = 50) {
     for (let i = 0; i < count; i++) {
       const c = document.createElement('div');
       c.className = 'confetti';
@@ -487,7 +626,7 @@
     return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
   }
 
-  function makeBalloons(count = 6) {
+  function makeBalloons(count = 7) {
     for (let i = 0; i < count; i++) {
       const b = document.createElement('div');
       b.className = 'balloon';
@@ -506,8 +645,16 @@
 
   const MONTHS = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
-  const MONTHS_ABBR = ['JAN','FEB','MAR','APR','MAY','JUN',
-                       'JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  function getDaySuffix(day) {
+    if (day >= 11 && day <= 13) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  }
 
   function parseCSV(text) {
     const rows = [];
@@ -520,7 +667,7 @@
         else { field += c; }
       } else {
         if (c === '"') { inQuotes = true; }
-        else if (c === ',')  { row.push(field); field = ''; }
+        else if (c === ',') { row.push(field); field = ''; }
         else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
         else if (c === '\r') { /* skip */ }
         else { field += c; }
@@ -552,7 +699,7 @@
     document.getElementById('year-label').textContent = currentYear;
 
     if (!SHEET_CSV_URL || SHEET_CSV_URL.includes('PASTE_YOUR')) {
-      renderError("Google Sheet not configured yet 🎈<br><br><span style='font-size:0.6em;opacity:0.7;font-family:Quicksand;'>Edit the HTML file and set SHEET_CSV_URL</span>");
+      renderError("Google Sheet not configured yet 🎈<br><br><span style='font-size:0.7em;opacity:0.7;font-family:Quicksand;'>Edit the HTML file and set SHEET_CSV_URL</span>");
       return;
     }
 
@@ -573,15 +720,16 @@
       if (rows.length < 2) throw new Error('No data rows found');
 
       const header = rows[0].map(h => h.trim().toLowerCase());
-      const nameIdx  = header.findIndex(h => h.includes('name'));
+      const nameIdx = header.findIndex(h => h.includes('name'));
       const monthIdx = header.findIndex(h => h.includes('month'));
-      const dayIdx   = header.findIndex(h => h.includes('day'));
+      const dayIdx = header.findIndex(h => h.includes('day'));
 
       if (nameIdx === -1 || monthIdx === -1 || dayIdx === -1) {
         throw new Error('Required columns missing. Need: Name, Month, Day');
       }
 
       const entries = [];
+      const todayEntries = [];
       for (let i = 1; i < rows.length; i++) {
         const r = rows[i];
         const name = (r[nameIdx] || '').trim();
@@ -590,69 +738,80 @@
         if (!name || !month || isNaN(day) || day < 1 || day > 31) continue;
         if (month === currentMonth) {
           entries.push({ name, month, day });
+          if (day === currentDay) todayEntries.push(name);
         }
       }
 
       entries.sort((a, b) => a.day - b.day);
-      renderBirthdays(entries, currentMonth, currentDay);
+      renderBirthdays(entries, todayEntries, currentDay);
     } catch (err) {
       console.error(err);
-      renderError("Couldn't load birthdays 🎈<br><br><span style='font-size:0.55em;opacity:0.7;font-family:Quicksand;'>Check that the Google Sheet is published as CSV</span>");
+      renderError("Couldn't load birthdays 🎈<br><br><span style='font-size:0.7em;opacity:0.7;font-family:Quicksand;'>Check that the Google Sheet is published as CSV</span>");
     }
   }
 
   function renderError(msg) {
     document.getElementById('main').innerHTML =
       `<div class="state-message">${msg}</div>`;
-    document.getElementById('count-text').textContent = '— celebrating this month';
   }
 
-  function renderBirthdays(entries, currentMonth, currentDay) {
-    const countEl = document.getElementById('count-text');
-    if (entries.length === 0) {
-      countEl.textContent = '0 birthdays this month';
-      document.getElementById('main').innerHTML =
-        `<div class="state-message">No birthdays on the calendar this month ✨<br>but the party never stops! 🎈</div>`;
-      return;
+  function renderBirthdays(entries, todayEntries, currentDay) {
+    let html = '';
+
+    // Today spotlight — big banner if someone's celebrating today
+    if (todayEntries.length > 0) {
+      html += `<section class="today-section">`;
+      html += `<div class="today-banner">`;
+      html += `<div class="today-header">`;
+      html += `<span class="cake-icon">🎂</span>`;
+      html += `<span class="today-title">Happy Birthday!</span>`;
+      html += `</div>`;
+      html += `<div class="today-names">`;
+      todayEntries.forEach(name => {
+        html += `<span class="today-name">${escapeHtml(name)}</span>`;
+      });
+      html += `</div>`;
+      html += `</div>`;
+      html += `</section>`;
     }
 
-    countEl.textContent = entries.length === 1
-      ? '1 birthday this month'
-      : `${entries.length} birthdays this month`;
-
-    let html = `<div class="card-wall">`;
-    entries.forEach((e, i) => {
-      const isToday = e.day === currentDay;
-      const past = e.day < currentDay;
-      const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
-      const colorClass = 'c' + ((i % 6) + 1);
-      const tiltClass  = 't' + ((i % 6) + 1);
-      const classes = ['card', colorClass, tiltClass];
-      if (isToday) classes.push('today');
-      else if (past) classes.push('past');
-
-      const ordinal = ordinalSuffix(e.day);
-      html += `<div class="${classes.join(' ')}" style="animation-delay:${0.1 + i * 0.06}s">`;
-      if (isToday) html += `<span class="today-ribbon">TODAY 🎂</span>`;
-      html += `
-        <div class="card-photo">
-          <span class="card-month-abbr">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
-          <span class="card-day">${e.day}</span>
-          <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
-        </div>
-        <div class="card-caption">${escapeHtml(e.name)}</div>
-      `;
-      html += `</div>`;
-    });
+    // All birthdays this month
+    html += `<section class="month-section">`;
+    html += `<div class="month-header">`;
+    html += `<span class="emoji">🎁</span>`;
+    html += `<span class="month-title">everyone celebrating this month</span>`;
+    html += `<span class="divider"></span>`;
     html += `</div>`;
 
-    document.getElementById('main').innerHTML = html;
-  }
+    if (entries.length === 0) {
+      html += `<div class="no-birthdays">No birthdays on the calendar this month ✨</div>`;
+    } else {
+      html += `<div class="month-list">`;
+      entries.forEach((e, i) => {
+        const isToday = e.day === currentDay;
+        const past = e.day < currentDay;
+        const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
+        const suffix = getDaySuffix(e.day);
+        const classes = ['month-item'];
+        if (isToday) classes.push('today');
+        else if (past) classes.push('past');
+        html += `<div class="${classes.join(' ')}" style="animation-delay:${i * 0.06}s">`;
+        if (isToday) html += `<span class="today-flag">TODAY</span>`;
+        html += `<div class="month-item-top">`;
+        html += `<span class="month-item-date">`;
+        html += `<span class="day-num">${e.day}</span>`;
+        html += `<span class="day-suffix">${suffix}</span>`;
+        html += `</span>`;
+        html += `<span class="month-item-emoji">${isToday ? '🎂' : emoji}</span>`;
+        html += `</div>`;
+        html += `<span class="month-item-name">${escapeHtml(e.name)}</span>`;
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</section>`;
 
-  function ordinalSuffix(n) {
-    const s = ['th','st','nd','rd'];
-    const v = n % 100;
-    return s[(v-20) % 10] || s[v] || s[0];
+    document.getElementById('main').innerHTML = html;
   }
 
   function escapeHtml(s) {
