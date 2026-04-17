@@ -31,7 +31,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 40px 60px 50px;
+    padding: 30px 60px 30px;
   }
 
   /* ===== Confetti ===== */
@@ -97,7 +97,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     opacity: 0;
     animation: fadeSlide 0.8s ease-out 0.15s forwards;
   }
@@ -195,7 +195,7 @@
     align-content: center;
     align-items: center;
     gap: var(--wall-gap, 28px) var(--wall-gap, 24px);
-    padding: 30px 20px 10px;
+    padding: 20px 30px;
     overflow: hidden;
   }
 
@@ -531,6 +531,8 @@
   const MONTHS_ABBR = ['JAN','FEB','MAR','APR','MAY','JUN',
                        'JUL','AUG','SEP','OCT','NOV','DEC'];
 
+  let lastLoaded = null;
+
   function parseCSV(text) {
     const rows = [];
     let row = [], field = '', inQuotes = false;
@@ -628,6 +630,7 @@
       }
 
       entries.sort((a, b) => a.day - b.day);
+      lastLoaded = { entries, currentMonth, currentDay };
       renderBirthdays(entries, currentMonth, currentDay);
     } catch (err) {
       console.error(err);
@@ -654,16 +657,59 @@
       ? '1 birthday this month'
       : `${entries.length} birthdays this month`;
 
-    // Dynamic sizing: scale polaroids down as the count grows so they all fit
-    // on screen without scrolling. Tuned for typical Skykit display sizes.
+    // Measure available space so polaroids always fit without clipping.
+    // We calculate how many columns × rows are needed, then pick the largest
+    // card width where (rows * card-height + gaps) fits the viewport height.
+    const mainEl = document.getElementById('main');
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    // Reserve vertical space for: body padding (60px), header (~110px),
+    // card-wall padding (40px), and safety margin for the today-glow (40px).
+    const availableH = viewportH - 250;
+    // Horizontal: body padding (120px) + card-wall padding (60px)
+    const availableW = viewportW - 180;
+
     const n = entries.length;
-    let cardW, gap, photoH, dayFs, captionFs;
-    if (n <= 4)       { cardW = 280; gap = 32; photoH = 170; dayFs = 5.4; captionFs = 2.0; }
-    else if (n <= 8)  { cardW = 240; gap = 28; photoH = 150; dayFs = 4.8; captionFs = 1.85; }
-    else if (n <= 12) { cardW = 210; gap = 24; photoH = 130; dayFs = 4.2; captionFs = 1.65; }
-    else if (n <= 18) { cardW = 185; gap = 20; photoH = 115; dayFs = 3.6; captionFs = 1.45; }
-    else if (n <= 25) { cardW = 165; gap = 16; photoH = 100; dayFs = 3.1; captionFs = 1.3;  }
-    else              { cardW = 145; gap = 14; photoH =  90; dayFs = 2.7; captionFs = 1.15; }
+
+    // Candidate sizes from largest to smallest. Each entry is:
+    // [cardW, gap, photoH, dayFs(rem), captionFs(rem)]
+    const sizeTiers = [
+      [300, 36, 185, 5.8, 2.15],
+      [270, 32, 170, 5.2, 2.0 ],
+      [240, 28, 150, 4.8, 1.85],
+      [215, 24, 135, 4.3, 1.7 ],
+      [195, 22, 120, 3.9, 1.55],
+      [175, 20, 105, 3.4, 1.4 ],
+      [160, 18,  95, 3.1, 1.3 ],
+      [145, 16,  85, 2.8, 1.2 ],
+      [130, 14,  75, 2.5, 1.1 ],
+      [115, 12,  65, 2.2, 1.0 ],
+    ];
+
+    // Approximate full card height: tape(12) + padding(30) + photo + caption(~1.2x fs in px) + bureau(~14) + gap-breathing
+    // fs rem → px: assume 16px base; today card is ~1.25x taller
+    let chosen = sizeTiers[sizeTiers.length - 1];
+    for (const tier of sizeTiers) {
+      const [cardW, gap, photoH, , captionFs] = tier;
+      const captionPx = captionFs * 16 * 1.2;
+      const cardH = 30 /*padding*/ + photoH + captionPx + 14 /*bureau*/ + 12 /*misc*/;
+
+      // Today card takes 1.5 card-widths horizontally
+      const hasToday = entries.some(e => e.day === currentDay);
+      const effectiveCardsForCols = hasToday ? n + 0.5 : n; // today ≈ 1.5 cards wide
+
+      const cols = Math.max(1, Math.floor((availableW + gap) / (cardW + gap)));
+      const rows = Math.ceil(effectiveCardsForCols / cols);
+      const totalH = rows * cardH + (rows - 1) * gap;
+
+      if (totalH <= availableH) {
+        chosen = tier;
+        break;
+      }
+    }
+
+    const [cardW, gap, photoH, dayFs, captionFs] = chosen;
 
     const root = document.documentElement;
     root.style.setProperty('--card-w', cardW + 'px');
@@ -716,6 +762,17 @@
 
   loadBirthdays();
   setInterval(loadBirthdays, REFRESH_HOURS * 60 * 60 * 1000);
+
+  // Re-render on resize so the sizing stays correct if viewport changes
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (lastLoaded) {
+        renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay);
+      }
+    }, 200);
+  });
 
   (function scheduleMidnightRefresh() {
     const now = new Date();
