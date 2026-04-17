@@ -184,11 +184,11 @@
     z-index: 2;
     min-height: 0;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .card-wall {
-    flex: 1;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -197,6 +197,8 @@
     gap: var(--wall-gap, 28px) var(--wall-gap, 24px);
     padding: 20px 30px;
     overflow: visible;
+    max-width: 100%;
+    transform-origin: center center;
   }
 
   .card {
@@ -413,7 +415,6 @@
 
   /* ===== Empty / Error states ===== */
   .state-message {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -422,6 +423,7 @@
     color: rgba(255,255,255,0.85);
     text-align: center;
     padding: 40px;
+    max-width: 80%;
   }
 
   @keyframes fadeSlide {
@@ -708,31 +710,42 @@
 
     document.getElementById('main').innerHTML = html;
 
-    // Measure actual rendered wall and scale down if it overflows the
-    // available space. We measure against the <main> container bounds,
-    // which already accounts for the header and body padding. We also
-    // account for the today-card glow halo (~75px on each side) so the
-    // pulse animation never gets clipped.
+    // Measure the rendered wall and, if it's bigger than the available space,
+    // scale it down visually AND shrink its layout box to match — so the
+    // parent flex container's centering uses the scaled size. This keeps
+    // the cards dead-center on any screen resolution.
     requestAnimationFrame(() => {
       const mainEl = document.getElementById('main');
       const wall   = mainEl.querySelector('.card-wall');
       if (!wall) return;
 
-      // Reset any prior scale so we measure true intrinsic size
+      // Reset prior styling so we measure true intrinsic dimensions
       wall.style.transform = '';
+      wall.style.width     = '';
+      wall.style.height    = '';
+      wall.style.margin    = '';
       wall.style.transformOrigin = 'center center';
 
-      const GLOW_PAD = 75; // space around wall for today-glow halo
+      const GLOW_PAD = 75; // reserved margin so today-glow never clips
       const availW = mainEl.clientWidth  - GLOW_PAD * 2;
       const availH = mainEl.clientHeight - GLOW_PAD * 2;
 
+      // Force layout flush so measurements are accurate
       const wallW = wall.scrollWidth;
       const wallH = wall.scrollHeight;
-
       if (wallW <= 0 || wallH <= 0) return;
 
       const scale = Math.min(1, availW / wallW, availH / wallH);
       if (scale < 1) {
+        // Pin intrinsic size, then use negative margins to shrink the
+        // layout footprint to match the scaled size. This way the parent
+        // flex container centers the scaled visual, not the pre-scale box.
+        wall.style.width  = wallW + 'px';
+        wall.style.height = wallH + 'px';
+        wall.style.marginLeft   = `${-(wallW - wallW*scale)/2}px`;
+        wall.style.marginRight  = `${-(wallW - wallW*scale)/2}px`;
+        wall.style.marginTop    = `${-(wallH - wallH*scale)/2}px`;
+        wall.style.marginBottom = `${-(wallH - wallH*scale)/2}px`;
         wall.style.transform = `scale(${scale})`;
       }
     });
