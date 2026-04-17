@@ -309,6 +309,18 @@
     word-break: break-word;
   }
 
+  .card-bureau {
+    font-family: 'Fredoka', sans-serif;
+    font-size: calc(var(--card-caption-fs, 1.85rem) * 0.4);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: #8a8aa3;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: -8px;
+    padding-bottom: 2px;
+  }
+
   /* Color variants cycled per card */
   .card.c1 { --accent: #ff6ec7; --accent-2: #ff8e6b; }
   .card.c2 { --accent: #05c3de; --accent-2: #236092; }
@@ -362,6 +374,9 @@
   .card.today .card-caption {
     font-size: calc(var(--card-caption-fs, 1.85rem) * 1.3);
     color: #1f1f35;
+  }
+  .card.today .card-bureau {
+    color: #a87a3d;
   }
   .card.today .card-emoji {
     font-size: 2.2rem;
@@ -549,6 +564,16 @@
     return null;
   }
 
+  function normalizeBureau(value) {
+    const v = String(value || '').trim();
+    if (!v) return '';
+    const upper = v.toUpperCase();
+    // Handle common variations so typos in the sheet still render cleanly
+    if (upper.includes('HACLB')) return 'HACLB';
+    if (upper.includes('HSB'))   return 'HSB';
+    return upper; // fall back to whatever was entered, uppercased
+  }
+
   async function loadBirthdays() {
     const today = new Date();
     const currentMonth = today.getMonth() + 1;
@@ -580,9 +605,10 @@
       if (rows.length < 2) throw new Error('No data rows found');
 
       const header = rows[0].map(h => h.trim().toLowerCase());
-      const nameIdx  = header.findIndex(h => h.includes('name'));
-      const monthIdx = header.findIndex(h => h.includes('month'));
-      const dayIdx   = header.findIndex(h => h.includes('day'));
+      const nameIdx   = header.findIndex(h => h.includes('name'));
+      const monthIdx  = header.findIndex(h => h.includes('month'));
+      const dayIdx    = header.findIndex(h => h.includes('day'));
+      const bureauIdx = header.findIndex(h => h.includes('bureau'));
 
       if (nameIdx === -1 || monthIdx === -1 || dayIdx === -1) {
         throw new Error('Required columns missing. Need: Name, Month, Day');
@@ -594,9 +620,10 @@
         const name = (r[nameIdx] || '').trim();
         const month = parseMonth(r[monthIdx]);
         const day = parseInt((r[dayIdx] || '').trim(), 10);
+        const bureau = bureauIdx !== -1 ? normalizeBureau(r[bureauIdx]) : '';
         if (!name || !month || isNaN(day) || day < 1 || day > 31) continue;
         if (month === currentMonth) {
-          entries.push({ name, month, day });
+          entries.push({ name, month, day, bureau });
         }
       }
 
@@ -666,6 +693,7 @@
           <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
         </div>
         <div class="card-caption">${escapeHtml(e.name)}</div>
+        ${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}
       `;
       html += `</div>`;
     });
