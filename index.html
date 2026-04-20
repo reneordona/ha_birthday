@@ -284,18 +284,6 @@
     word-break: break-word;
     padding: 0 4px;
   }
-  .card-month-abbr {
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    color: rgba(255,255,255,0.85);
-    text-transform: uppercase;
-    z-index: 1;
-  }
   .card-emoji {
     position: absolute;
     bottom: 8px;
@@ -539,8 +527,8 @@
 
   const MONTHS = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
-  const MONTHS_ABBR = ['JAN','FEB','MAR','APR','MAY','JUN',
-                       'JUL','AUG','SEP','OCT','NOV','DEC'];
+  const MONTHS_ABBR = ['Jan','Feb','Mar','Apr','May','Jun',
+                       'Jul','Aug','Sep','Oct','Nov','Dec'];
 
   let lastLoaded = null;
 
@@ -707,12 +695,11 @@
       if (isToday) html += `<span class="today-ribbon">TODAY 🎂</span>`;
       html += `
         <div class="card-photo">
-          <span class="card-month-abbr">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
           <span class="card-name">${escapeHtml(e.name)}</span>
           <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
         </div>
         <div class="card-day-strip">
-          <span class="card-day-num">${e.day}${ordinal}</span>
+          <span class="card-day-num">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
         </div>
         ${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}
       `;
