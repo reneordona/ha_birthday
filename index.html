@@ -259,6 +259,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 12px;
   }
   .card-photo::after {
     content: '';
@@ -269,15 +270,19 @@
       radial-gradient(circle at 75% 75%, rgba(0,0,0,0.12), transparent 50%);
     pointer-events: none;
   }
-  .card-day {
-    font-family: 'Fredoka', sans-serif;
+  /* Name is now the focal point — large, on the colored area */
+  .card-name {
+    font-family: 'Caveat', cursive;
     font-weight: 700;
-    font-size: var(--card-day-fs, 4.8rem);
+    font-size: var(--card-name-fs, 2.8rem);
     color: #fff;
-    line-height: 1;
-    text-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    line-height: 1.05;
+    text-align: center;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.28);
     position: relative;
     z-index: 1;
+    word-break: break-word;
+    padding: 0 4px;
   }
   .card-month-abbr {
     position: absolute;
@@ -300,26 +305,30 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
   }
 
-  .card-caption {
-    font-family: 'Caveat', cursive;
-    font-size: var(--card-caption-fs, 1.85rem);
-    font-weight: 600;
-    color: #2a2a3f;
-    text-align: center;
-    line-height: 1.1;
-    padding: 0 6px 4px;
-    word-break: break-word;
+  /* Day moves to the white caption strip — smaller, secondary */
+  .card-day-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 2px 6px 4px;
+  }
+  .card-day-num {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: var(--card-day-fs, 1.6rem);
+    color: var(--secondary);
+    line-height: 1;
   }
 
   .card-bureau {
     font-family: 'Fredoka', sans-serif;
-    font-size: calc(var(--card-caption-fs, 1.85rem) * 0.4);
+    font-size: calc(var(--card-day-fs, 1.6rem) * 0.4);
     font-weight: 600;
     letter-spacing: 0.22em;
-    color: #8a8aa3;
+    color: #b0b0c4;
     text-align: center;
     text-transform: uppercase;
-    margin-top: -8px;
     padding-bottom: 2px;
   }
 
@@ -370,12 +379,12 @@
     height: calc(var(--card-photo-h, 150px) * 1.2);
     background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 50%, #ff8e6b 100%);
   }
-  .card.today .card-day {
-    font-size: calc(var(--card-day-fs, 4.8rem) * 1.25);
+  .card.today .card-name {
+    font-size: calc(var(--card-name-fs, 2.8rem) * 1.25);
   }
-  .card.today .card-caption {
-    font-size: calc(var(--card-caption-fs, 1.85rem) * 1.3);
-    color: #1f1f35;
+  .card.today .card-day-num {
+    font-size: calc(var(--card-day-fs, 1.6rem) * 1.3);
+    color: #c94a87;
   }
   .card.today .card-bureau {
     color: #a87a3d;
@@ -444,8 +453,8 @@
     .card-wall { gap: 22px 16px; }
     .card { width: 180px !important; }
     .card.today { width: 260px !important; }
-    .card-day { font-size: 3.8rem; }
-    .card-caption { font-size: 1.5rem; }
+    .card-name { font-size: 2.0rem; }
+    .card-day-num { font-size: 1.3rem; }
   }
 </style>
 </head>
@@ -662,24 +671,25 @@
     // Sizing strategy: pick a reasonable starting tier based on count,
     // render the cards, then measure the actual rendered wall and scale
     // it down with transform if it's larger than the available viewport.
-    // This is foolproof because we measure actual DOM instead of guessing.
+    // Variables: cardW, gap, photoH (color area height where name shows),
+    //   nameFs (focal name size, rem), dayFs (small day strip, rem)
     const n = entries.length;
-    let cardW, gap, photoH, dayFs, captionFs;
-    if (n <= 3)       { cardW = 300; gap = 36; photoH = 185; dayFs = 5.8; captionFs = 2.15; }
-    else if (n <= 6)  { cardW = 270; gap = 32; photoH = 170; dayFs = 5.2; captionFs = 2.0; }
-    else if (n <= 9)  { cardW = 240; gap = 28; photoH = 150; dayFs = 4.8; captionFs = 1.85; }
-    else if (n <= 12) { cardW = 220; gap = 26; photoH = 135; dayFs = 4.4; captionFs = 1.7;  }
-    else if (n <= 16) { cardW = 200; gap = 22; photoH = 120; dayFs = 4.0; captionFs = 1.55; }
-    else if (n <= 20) { cardW = 180; gap = 20; photoH = 108; dayFs = 3.6; captionFs = 1.4;  }
-    else if (n <= 28) { cardW = 165; gap = 18; photoH =  98; dayFs = 3.2; captionFs = 1.3;  }
-    else              { cardW = 150; gap = 16; photoH =  88; dayFs = 2.9; captionFs = 1.2;  }
+    let cardW, gap, photoH, nameFs, dayFs;
+    if (n <= 3)       { cardW = 300; gap = 36; photoH = 185; nameFs = 3.6; dayFs = 1.9; }
+    else if (n <= 6)  { cardW = 270; gap = 32; photoH = 170; nameFs = 3.2; dayFs = 1.75; }
+    else if (n <= 9)  { cardW = 240; gap = 28; photoH = 150; nameFs = 2.8; dayFs = 1.6; }
+    else if (n <= 12) { cardW = 220; gap = 26; photoH = 135; nameFs = 2.5; dayFs = 1.45; }
+    else if (n <= 16) { cardW = 200; gap = 22; photoH = 120; nameFs = 2.3; dayFs = 1.35; }
+    else if (n <= 20) { cardW = 180; gap = 20; photoH = 108; nameFs = 2.0; dayFs = 1.2; }
+    else if (n <= 28) { cardW = 165; gap = 18; photoH =  98; nameFs = 1.8; dayFs = 1.1; }
+    else              { cardW = 150; gap = 16; photoH =  88; nameFs = 1.6; dayFs = 1.0; }
 
     const root = document.documentElement;
     root.style.setProperty('--card-w', cardW + 'px');
     root.style.setProperty('--wall-gap', gap + 'px');
     root.style.setProperty('--card-photo-h', photoH + 'px');
+    root.style.setProperty('--card-name-fs', nameFs + 'rem');
     root.style.setProperty('--card-day-fs', dayFs + 'rem');
-    root.style.setProperty('--card-caption-fs', captionFs + 'rem');
 
     let html = `<div class="card-wall">`;
     entries.forEach((e, i) => {
@@ -698,10 +708,12 @@
       html += `
         <div class="card-photo">
           <span class="card-month-abbr">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
-          <span class="card-day">${e.day}</span>
+          <span class="card-name">${escapeHtml(e.name)}</span>
           <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
         </div>
-        <div class="card-caption">${escapeHtml(e.name)}</div>
+        <div class="card-day-strip">
+          <span class="card-day-num">${e.day}${ordinal}</span>
+        </div>
         ${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}
       `;
       html += `</div>`;
