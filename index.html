@@ -160,21 +160,18 @@
   }
   function renderError(msg) { document.getElementById('main').innerHTML = `<div class="state-message">${msg}</div>`; document.getElementById('count-text').textContent = '— celebrating this month'; }
 
-  // Sizing tiers, ordered LARGEST first. Fit-up algorithm picks the first
-  // that fits the available space. Generous top tiers so few-birthday
-  // months grow naturally; today card is only 1.15× wider so it doesn't
-  // singlehandedly trigger unnecessary downscaling.
+  // Sizing tiers, ordered LARGEST first.
   const SIZE_TIERS = [
-    { cardW: 320, gap: 36, photoH: 200, nameFs: 3.8,  dayFs: 2.0  },
-    { cardW: 290, gap: 32, photoH: 185, nameFs: 3.4,  dayFs: 1.85 },
-    { cardW: 265, gap: 30, photoH: 170, nameFs: 3.1,  dayFs: 1.75 },
-    { cardW: 240, gap: 28, photoH: 155, nameFs: 2.8,  dayFs: 1.6  },
-    { cardW: 220, gap: 26, photoH: 140, nameFs: 2.55, dayFs: 1.5  },
-    { cardW: 200, gap: 22, photoH: 125, nameFs: 2.3,  dayFs: 1.4  },
-    { cardW: 180, gap: 20, photoH: 110, nameFs: 2.1,  dayFs: 1.3  },
-    { cardW: 165, gap: 18, photoH:  98, nameFs: 1.9,  dayFs: 1.2  },
-    { cardW: 150, gap: 16, photoH:  88, nameFs: 1.7,  dayFs: 1.1  },
-    { cardW: 138, gap: 14, photoH:  80, nameFs: 1.55, dayFs: 1.0  },
+    { cardW: 340, gap: 38, photoH: 215, nameFs: 4.0,  dayFs: 2.1  },
+    { cardW: 310, gap: 34, photoH: 195, nameFs: 3.6,  dayFs: 1.95 },
+    { cardW: 285, gap: 32, photoH: 180, nameFs: 3.3,  dayFs: 1.85 },
+    { cardW: 260, gap: 30, photoH: 165, nameFs: 3.0,  dayFs: 1.7  },
+    { cardW: 235, gap: 28, photoH: 150, nameFs: 2.75, dayFs: 1.6  },
+    { cardW: 215, gap: 26, photoH: 135, nameFs: 2.5,  dayFs: 1.5  },
+    { cardW: 195, gap: 22, photoH: 120, nameFs: 2.25, dayFs: 1.4  },
+    { cardW: 175, gap: 20, photoH: 108, nameFs: 2.05, dayFs: 1.3  },
+    { cardW: 158, gap: 18, photoH:  95, nameFs: 1.85, dayFs: 1.2  },
+    { cardW: 142, gap: 16, photoH:  85, nameFs: 1.65, dayFs: 1.1  },
   ];
   function applyTier(tier) {
     const root = document.documentElement;
@@ -214,20 +211,31 @@
     if (!wall) return;
     wall.style.transform = ''; wall.style.width = ''; wall.style.height = ''; wall.style.margin = '';
     wall.style.transformOrigin = 'center center';
-    const PAD_X = 90, PAD_Y = 75;
+
+    // Tighter breathing room: 40px each side. Cards still don't touch the
+    // edges, but we don't waste 180px+ of viewport like before.
+    const PAD_X = 40, PAD_Y = 40;
     const availW = mainEl.clientWidth - PAD_X * 2;
     const availH = mainEl.clientHeight - PAD_Y * 2;
+
+    // Try each tier from largest to smallest; pick the first that fits.
     let chosenTier = SIZE_TIERS[SIZE_TIERS.length - 1];
     for (const tier of SIZE_TIERS) {
       applyTier(tier);
       wall.offsetHeight; // force layout
-      if (wall.scrollWidth <= availW && wall.scrollHeight <= availH) { chosenTier = tier; break; }
+      // Allow 4px tolerance so sub-pixel rounding doesn't kick us down a tier
+      if (wall.scrollWidth <= availW + 4 && wall.scrollHeight <= availH + 4) {
+        chosenTier = tier;
+        break;
+      }
     }
     applyTier(chosenTier);
+
+    // Final safety net — only fires if even the smallest tier overflows
     requestAnimationFrame(() => {
       wall.offsetHeight;
       const w = wall.scrollWidth, h = wall.scrollHeight;
-      if (w > availW || h > availH) {
+      if (w > availW + 4 || h > availH + 4) {
         const scale = Math.min(availW / w, availH / h);
         wall.style.width = w + 'px'; wall.style.height = h + 'px';
         wall.style.marginLeft = `${-(w - w*scale)/2}px`;
