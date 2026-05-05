@@ -16,10 +16,8 @@
     --mint: #6bffb8;
     --purple: #b892ff;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; }
-
   body {
     background:
       radial-gradient(ellipse at top right, rgba(255,110,199,0.22), transparent 55%),
@@ -33,417 +31,62 @@
     flex-direction: column;
     padding: 30px 60px 30px;
   }
-
-  /* ===== Confetti ===== */
-  .confetti {
-    position: fixed;
-    top: -20px;
-    width: 10px;
-    height: 14px;
-    opacity: 0.85;
-    z-index: 1;
-    animation: fall linear infinite;
-    pointer-events: none;
-  }
-  @keyframes fall {
-    0% { transform: translateY(-20px) rotate(0deg); }
-    100% { transform: translateY(110vh) rotate(720deg); }
-  }
-
-  /* ===== Balloons ===== */
-  .balloon {
-    position: fixed;
-    bottom: -200px;
-    width: 60px;
-    height: 75px;
-    border-radius: 50%;
-    z-index: 1;
-    animation: float-up linear infinite;
-    pointer-events: none;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-  }
-  .balloon::before {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 10px solid currentColor;
-    opacity: 0.85;
-  }
-  .balloon::after {
-    content: '';
-    position: absolute;
-    bottom: -120px;
-    left: 50%;
-    width: 1px;
-    height: 120px;
-    background: rgba(255,255,255,0.4);
-  }
-  @keyframes float-up {
-    0%   { transform: translateY(0) translateX(0); }
-    50%  { transform: translateY(-50vh) translateX(20px); }
-    100% { transform: translateY(-110vh) translateX(-10px); }
-  }
-
-  /* ===== Header ===== */
-  header {
-    position: relative;
-    z-index: 3;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 10px;
-    opacity: 0;
-    animation: fadeSlide 0.8s ease-out 0.15s forwards;
-  }
-
+  .confetti { position: fixed; top: -20px; width: 10px; height: 14px; opacity: 0.85; z-index: 1; animation: fall linear infinite; pointer-events: none; }
+  @keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); } 100% { transform: translateY(110vh) rotate(720deg); } }
+  .balloon { position: fixed; bottom: -200px; width: 60px; height: 75px; border-radius: 50%; z-index: 1; animation: float-up linear infinite; pointer-events: none; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+  .balloon::before { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid currentColor; opacity: 0.85; }
+  .balloon::after { content: ''; position: absolute; bottom: -120px; left: 50%; width: 1px; height: 120px; background: rgba(255,255,255,0.4); }
+  @keyframes float-up { 0% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-50vh) translateX(20px); } 100% { transform: translateY(-110vh) translateX(-10px); } }
+  header { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; opacity: 0; animation: fadeSlide 0.8s ease-out 0.15s forwards; }
   .title-stack { line-height: 1; }
-
-  .eyebrow {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--yellow);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .eyebrow .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--yellow);
-    box-shadow: 0 0 12px var(--yellow);
-  }
-
-  .big-month {
-    font-family: 'Caveat', cursive;
-    font-size: 5.8rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.25);
-    letter-spacing: -0.01em;
-  }
-  .big-month .accent {
-    color: var(--pink);
-    display: inline-block;
-    transform: rotate(-4deg);
-  }
-
-  .header-right {
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-  }
-  .year-pill {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.25em;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
-  }
-  .count-pill {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--pink), var(--coral));
-    box-shadow: 0 6px 20px rgba(255,110,199,0.4);
-    color: #fff;
-  }
-  .count-pill .wiggle {
-    display: inline-block;
-    animation: wiggle 2s ease-in-out infinite;
-    margin-right: 6px;
-  }
-  @keyframes wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    75% { transform: rotate(15deg); }
-  }
-
-  /* ===== Main / Card Wall ===== */
-  main {
-    flex: 1;
-    position: relative;
-    z-index: 2;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-wall {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    gap: var(--wall-gap, 28px) var(--wall-gap, 24px);
-    padding: 20px 30px;
-    overflow: visible;
-    max-width: 100%;
-    transform-origin: center center;
-  }
-
-  .card {
-    width: var(--card-w, 240px);
-    flex-shrink: 0;
-  }
-
-  /* ----- Polaroid Card ----- */
-  .card {
-    --tilt: -2deg;
-    --accent: var(--pink);
-    background: #fff;
-    border-radius: 10px;
-    padding: 14px 14px 16px;
-    box-shadow:
-      0 12px 28px rgba(0,0,0,0.28),
-      0 4px 8px rgba(0,0,0,0.18);
-    transform: rotate(var(--tilt));
-    position: relative;
-    color: #1f1f35;
-    opacity: 0;
-    animation: popIn 0.55s ease-out forwards;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: rotate(var(--tilt)) scale(0.85) translateY(14px); }
-    to   { opacity: 1; transform: rotate(var(--tilt)) scale(1)    translateY(0); }
-  }
-
-  /* Tape strip at the top of each polaroid */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 90px;
-    height: 24px;
-    background: linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.55) 0%,
-      rgba(255,255,255,0.25) 100%
-    );
-    border-left: 1px dashed rgba(255,255,255,0.6);
-    border-right: 1px dashed rgba(255,255,255,0.6);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    z-index: 2;
-  }
-
-  .card-photo {
-    height: var(--card-photo-h, 150px);
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2, var(--accent)));
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-  }
-  .card-photo::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.35), transparent 45%),
-      radial-gradient(circle at 75% 75%, rgba(0,0,0,0.12), transparent 50%);
-    pointer-events: none;
-  }
-  /* Name is now the focal point — large, on the colored area */
-  .card-name {
-    font-family: 'Caveat', cursive;
-    font-weight: 700;
-    font-size: var(--card-name-fs, 2.8rem);
-    color: #fff;
-    line-height: 1.05;
-    text-align: center;
-    text-shadow: 0 3px 12px rgba(0,0,0,0.28);
-    position: relative;
-    z-index: 1;
-    word-break: break-word;
-    padding: 0 4px;
-  }
-  .card-emoji {
-    position: absolute;
-    bottom: 8px;
-    right: 10px;
-    font-size: 1.5rem;
-    z-index: 1;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-  }
-
-  /* Day moves to the white caption strip — smaller, secondary */
-  .card-day-strip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 2px 6px 4px;
-  }
-  .card-day-num {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: var(--card-day-fs, 1.6rem);
-    color: var(--secondary);
-    line-height: 1;
-  }
-
-  .card-bureau {
-    font-family: 'Fredoka', sans-serif;
-    font-size: calc(var(--card-day-fs, 1.6rem) * 0.4);
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    color: #b0b0c4;
-    text-align: center;
-    text-transform: uppercase;
-    padding-bottom: 2px;
-  }
-
-  /* Color variants cycled per card */
+  .eyebrow { font-family: 'Fredoka', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--yellow); display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 12px var(--yellow); }
+  .big-month { font-family: 'Caveat', cursive; font-size: 5.8rem; font-weight: 700; color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,0.25); letter-spacing: -0.01em; }
+  .big-month .accent { color: var(--pink); display: inline-block; transform: rotate(-4deg); }
+  .header-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .year-pill { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.25em; padding: 8px 18px; border-radius: 999px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+  .count-pill { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.05em; padding: 10px 20px; border-radius: 999px; background: linear-gradient(135deg, var(--pink), var(--coral)); box-shadow: 0 6px 20px rgba(255,110,199,0.4); color: #fff; }
+  .count-pill .wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; margin-right: 6px; }
+  @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
+  main { flex: 1; position: relative; z-index: 2; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .card-wall { display: flex; flex-wrap: wrap; justify-content: center; align-content: center; align-items: center; gap: var(--wall-gap, 28px) var(--wall-gap, 24px); padding: 20px 30px; overflow: visible; max-width: 100%; transform-origin: center center; }
+  .card { width: var(--card-w, 240px); flex-shrink: 0; --tilt: -2deg; --accent: var(--pink); background: #fff; border-radius: 10px; padding: 14px 14px 16px; box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 4px 8px rgba(0,0,0,0.18); transform: rotate(var(--tilt)); position: relative; color: #1f1f35; opacity: 0; animation: popIn 0.55s ease-out forwards; display: flex; flex-direction: column; gap: 12px; }
+  @keyframes popIn { from { opacity: 0; transform: rotate(var(--tilt)) scale(0.85) translateY(14px); } to { opacity: 1; transform: rotate(var(--tilt)) scale(1) translateY(0); } }
+  .card::before { content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 90px; height: 24px; background: linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 100%); border-left: 1px dashed rgba(255,255,255,0.6); border-right: 1px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.08); z-index: 2; }
+  .card-photo { height: var(--card-photo-h, 150px); border-radius: 6px; background: linear-gradient(135deg, var(--accent), var(--accent-2, var(--accent))); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 12px; }
+  .card-photo::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.35), transparent 45%), radial-gradient(circle at 75% 75%, rgba(0,0,0,0.12), transparent 50%); pointer-events: none; }
+  .card-name { font-family: 'Caveat', cursive; font-weight: 700; font-size: var(--card-name-fs, 2.8rem); color: #fff; line-height: 1.05; text-align: center; text-shadow: 0 3px 12px rgba(0,0,0,0.28); position: relative; z-index: 1; word-break: break-word; padding: 0 4px; }
+  .card-emoji { position: absolute; bottom: 8px; right: 10px; font-size: 1.5rem; z-index: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+  .card-day-strip { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 2px 6px 4px; }
+  .card-day-num { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: var(--card-day-fs, 1.6rem); color: var(--secondary); line-height: 1; }
+  .card-bureau { font-family: 'Fredoka', sans-serif; font-size: calc(var(--card-day-fs, 1.6rem) * 0.4); font-weight: 600; letter-spacing: 0.22em; color: #b0b0c4; text-align: center; text-transform: uppercase; padding-bottom: 2px; }
   .card.c1 { --accent: #ff6ec7; --accent-2: #ff8e6b; }
   .card.c2 { --accent: #05c3de; --accent-2: #236092; }
   .card.c3 { --accent: #b892ff; --accent-2: #6b8dff; }
   .card.c4 { --accent: #ffd93d; --accent-2: #ff8e6b; }
   .card.c5 { --accent: #6bffb8; --accent-2: #05c3de; }
   .card.c6 { --accent: #ff8e6b; --accent-2: #ff6ec7; }
-
-  /* Tilt variants */
   .card.t1 { --tilt: -2.5deg; }
-  .card.t2 { --tilt:  1.8deg; }
+  .card.t2 { --tilt: 1.8deg; }
   .card.t3 { --tilt: -1.2deg; }
-  .card.t4 { --tilt:  2.8deg; }
+  .card.t4 { --tilt: 2.8deg; }
   .card.t5 { --tilt: -3deg; }
-  .card.t6 { --tilt:  0.5deg; }
-
-  /* Past birthdays — subtle vintage look */
-  .card.past {
-    opacity: 0.45;
-    filter: grayscale(0.35);
-  }
-
-  /* ---- TODAY card: spotlight, glow, larger ---- */
-  .card.today {
-    --tilt: -1deg;
-    width: calc(var(--card-w, 240px) * 1.5);
-    padding: 20px;
-    background: linear-gradient(180deg, #fff 0%, #fff7e6 100%);
-    box-shadow:
-      0 18px 48px rgba(255,217,61,0.35),
-      0 0 0 4px rgba(255,255,255,0.25),
-      0 0 55px rgba(255,110,199,0.4);
-    animation: popIn 0.6s ease-out forwards, todayPulse 3s ease-in-out infinite 0.8s;
-    z-index: 2;
-  }
-  @keyframes todayPulse {
-    0%, 100% {
-      box-shadow: 0 18px 48px rgba(255,217,61,0.35), 0 0 0 4px rgba(255,255,255,0.25), 0 0 55px rgba(255,110,199,0.4);
-    }
-    50% {
-      box-shadow: 0 22px 56px rgba(255,217,61,0.5),  0 0 0 4px rgba(255,255,255,0.3),  0 0 75px rgba(255,110,199,0.6);
-    }
-  }
-  .card.today .card-photo {
-    height: calc(var(--card-photo-h, 150px) * 1.2);
-    background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 50%, #ff8e6b 100%);
-  }
-  .card.today .card-name {
-    font-size: calc(var(--card-name-fs, 2.8rem) * 1.25);
-  }
-  .card.today .card-day-num {
-    font-size: calc(var(--card-day-fs, 1.6rem) * 1.3);
-    color: #c94a87;
-  }
-  .card.today .card-bureau {
-    color: #a87a3d;
-  }
-  .card.today .card-emoji {
-    font-size: 2.2rem;
-    animation: bob 1.4s ease-in-out infinite;
-  }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0) rotate(-8deg); }
-    50%      { transform: translateY(-6px) rotate(8deg); }
-  }
-
-  .today-ribbon {
-    position: absolute;
-    top: 14px;
-    right: -10px;
-    background: linear-gradient(135deg, #ff6ec7, #ff8e6b);
-    color: #fff;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    padding: 7px 18px 7px 14px;
-    border-radius: 4px 0 0 4px;
-    box-shadow: 0 6px 16px rgba(255,110,199,0.5);
-    z-index: 3;
-  }
-  .today-ribbon::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: -6px;
-    border-top: 6px solid #c94a87;
-    border-right: 6px solid transparent;
-  }
-
-  /* ===== Empty / Error states ===== */
-  .state-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Caveat', cursive;
-    font-size: 2.2rem;
-    color: rgba(255,255,255,0.85);
-    text-align: center;
-    padding: 40px;
-    max-width: 80%;
-  }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ===== Responsive ===== */
-  @media (max-width: 1100px) {
-    body { padding: 30px 40px; }
-    .big-month { font-size: 4.5rem; }
-  }
-  @media (max-width: 700px) {
-    body { padding: 24px 24px 30px; }
-    header { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .header-right { align-items: flex-start; text-align: left; }
-    .big-month { font-size: 3.6rem; }
-    .card-wall { gap: 22px 16px; }
-    .card { width: 180px !important; }
-    .card.today { width: 260px !important; }
-    .card-name { font-size: 2.0rem; }
-    .card-day-num { font-size: 1.3rem; }
-  }
+  .card.t6 { --tilt: 0.5deg; }
+  .card.past { opacity: 0.45; filter: grayscale(0.35); }
+  .card.today { --tilt: -1deg; width: calc(var(--card-w, 240px) * 1.15); padding: 18px; background: linear-gradient(180deg, #fff 0%, #fff7e6 100%); box-shadow: 0 18px 48px rgba(255,217,61,0.35), 0 0 0 4px rgba(255,255,255,0.25), 0 0 55px rgba(255,110,199,0.4); animation: popIn 0.6s ease-out forwards, todayPulse 3s ease-in-out infinite 0.8s; z-index: 2; }
+  @keyframes todayPulse { 0%, 100% { box-shadow: 0 18px 48px rgba(255,217,61,0.35), 0 0 0 4px rgba(255,255,255,0.25), 0 0 55px rgba(255,110,199,0.4); } 50% { box-shadow: 0 22px 56px rgba(255,217,61,0.5), 0 0 0 4px rgba(255,255,255,0.3), 0 0 75px rgba(255,110,199,0.6); } }
+  .card.today .card-photo { height: calc(var(--card-photo-h, 150px) * 1.1); background: linear-gradient(135deg, #ff6ec7 0%, #ffd93d 50%, #ff8e6b 100%); }
+  .card.today .card-name { font-size: calc(var(--card-name-fs, 2.8rem) * 1.18); }
+  .card.today .card-day-num { font-size: calc(var(--card-day-fs, 1.6rem) * 1.2); color: #c94a87; }
+  .card.today .card-bureau { color: #a87a3d; }
+  .card.today .card-emoji { font-size: 1.9rem; animation: bob 1.4s ease-in-out infinite; }
+  @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-6px) rotate(8deg); } }
+  .today-ribbon { position: absolute; top: 14px; right: -10px; background: linear-gradient(135deg, #ff6ec7, #ff8e6b); color: #fff; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.22em; padding: 7px 18px 7px 14px; border-radius: 4px 0 0 4px; box-shadow: 0 6px 16px rgba(255,110,199,0.5); z-index: 3; }
+  .today-ribbon::after { content: ''; position: absolute; right: 0; bottom: -6px; border-top: 6px solid #c94a87; border-right: 6px solid transparent; }
+  .state-message { display: flex; align-items: center; justify-content: center; font-family: 'Caveat', cursive; font-size: 2.2rem; color: rgba(255,255,255,0.85); text-align: center; padding: 40px; max-width: 80%; }
+  @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 1100px) { body { padding: 30px 40px; } .big-month { font-size: 4.5rem; } }
+  @media (max-width: 700px) { body { padding: 24px 24px 30px; } header { flex-direction: column; align-items: flex-start; gap: 14px; } .header-right { align-items: flex-start; text-align: left; } .big-month { font-size: 3.6rem; } .card-wall { gap: 22px 16px; } .card { width: 180px !important; } .card.today { width: 207px !important; } .card-name { font-size: 2.0rem; } .card-day-num { font-size: 1.3rem; } }
 </style>
 </head>
 <body>
@@ -460,161 +103,46 @@
       <div class="year-pill" id="year-label">2026</div>
     </div>
   </header>
-
   <main id="main">
     <div class="state-message">Loading birthdays… 🎈</div>
   </main>
-
 <script>
-  // ============================================================
-  // CONFIG — paste your published Google Sheet CSV URL below
-  // ============================================================
-  // 1. In Google Sheets: File → Share → Publish to web
-  // 2. Choose the birthday sheet/tab
-  // 3. Select "Comma-separated values (.csv)"
-  // 4. Click Publish, then copy the URL
-  // 5. Paste between the quotes below
-  //
-  // Expected columns (first row is headers):
-  //   Name | Month | Day
-  // ============================================================
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSNYPnsghleG2vyJgNbePYiiXruEAy1m7d3Wco_UQiUpiVgPZgKxbDCOTjDjrrrw3D_HEQl8yd7Dxkh/pub?output=csv";
   const REFRESH_HOURS = 6;
-
   const CONFETTI_COLORS = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
-  const BALLOON_COLORS  = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
+  const BALLOON_COLORS = ['#ff6ec7','#ffd93d','#ff8e6b','#6bffb8','#b892ff','#05c3de'];
   const BIRTHDAY_EMOJIS = ['🎂','🎁','🎈','🎊','🥳','🧁','🍰','⭐','✨','🎀'];
-
-  function makeConfetti(count = 40) {
-    for (let i = 0; i < count; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-      c.style.background = color;
-      c.style.left = Math.random() * 100 + 'vw';
-      c.style.animationDuration = (6 + Math.random() * 6) + 's';
-      c.style.animationDelay = (Math.random() * 8) + 's';
-      if (Math.random() > 0.5) c.style.borderRadius = '50%';
-      if (Math.random() > 0.7) { c.style.width = '6px'; c.style.height = '16px'; }
-      document.body.appendChild(c);
-    }
-  }
-
-  function lighten(hex) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    const mix = (v) => Math.min(255, Math.round(v + (255-v)*0.5));
-    return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
-  }
-
-  function makeBalloons(count = 6) {
-    for (let i = 0; i < count; i++) {
-      const b = document.createElement('div');
-      b.className = 'balloon';
-      const color = BALLOON_COLORS[i % BALLOON_COLORS.length];
-      b.style.background = `radial-gradient(circle at 30% 30%, ${lighten(color)}, ${color})`;
-      b.style.color = color;
-      b.style.left = (10 + Math.random() * 80) + 'vw';
-      b.style.animationDuration = (18 + Math.random() * 12) + 's';
-      b.style.animationDelay = (Math.random() * 20) + 's';
-      document.body.appendChild(b);
-    }
-  }
-
+  function makeConfetti(count = 40) { for (let i = 0; i < count; i++) { const c = document.createElement('div'); c.className = 'confetti'; const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length]; c.style.background = color; c.style.left = Math.random() * 100 + 'vw'; c.style.animationDuration = (6 + Math.random() * 6) + 's'; c.style.animationDelay = (Math.random() * 8) + 's'; if (Math.random() > 0.5) c.style.borderRadius = '50%'; if (Math.random() > 0.7) { c.style.width = '6px'; c.style.height = '16px'; } document.body.appendChild(c); } }
+  function lighten(hex) { const r = parseInt(hex.slice(1,3),16); const g = parseInt(hex.slice(3,5),16); const b = parseInt(hex.slice(5,7),16); const mix = (v) => Math.min(255, Math.round(v + (255-v)*0.5)); return `rgb(${mix(r)},${mix(g)},${mix(b)})`; }
+  function makeBalloons(count = 6) { for (let i = 0; i < count; i++) { const b = document.createElement('div'); b.className = 'balloon'; const color = BALLOON_COLORS[i % BALLOON_COLORS.length]; b.style.background = `radial-gradient(circle at 30% 30%, ${lighten(color)}, ${color})`; b.style.color = color; b.style.left = (10 + Math.random() * 80) + 'vw'; b.style.animationDuration = (18 + Math.random() * 12) + 's'; b.style.animationDelay = (Math.random() * 20) + 's'; document.body.appendChild(b); } }
   makeConfetti();
   makeBalloons();
-
-  const MONTHS = ['January','February','March','April','May','June',
-                  'July','August','September','October','November','December'];
-  const MONTHS_ABBR = ['Jan','Feb','Mar','Apr','May','Jun',
-                       'Jul','Aug','Sep','Oct','Nov','Dec'];
-
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let lastLoaded = null;
-
-  function parseCSV(text) {
-    const rows = [];
-    let row = [], field = '', inQuotes = false;
-    for (let i = 0; i < text.length; i++) {
-      const c = text[i];
-      if (inQuotes) {
-        if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
-        else if (c === '"') { inQuotes = false; }
-        else { field += c; }
-      } else {
-        if (c === '"') { inQuotes = true; }
-        else if (c === ',')  { row.push(field); field = ''; }
-        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
-        else if (c === '\r') { /* skip */ }
-        else { field += c; }
-      }
-    }
-    if (field.length || row.length) { row.push(field); rows.push(row); }
-    return rows.filter(r => r.some(cell => cell.trim() !== ''));
-  }
-
-  function parseMonth(value) {
-    const v = String(value).trim();
-    if (!v) return null;
-    const n = parseInt(v, 10);
-    if (!isNaN(n) && n >= 1 && n <= 12) return n;
-    const lower = v.toLowerCase();
-    for (let i = 0; i < MONTHS.length; i++) {
-      if (MONTHS[i].toLowerCase().startsWith(lower.slice(0,3))) return i + 1;
-    }
-    return null;
-  }
-
-  function normalizeBureau(value) {
-    const v = String(value || '').trim();
-    if (!v) return '';
-    const upper = v.toUpperCase();
-    // Handle common variations so typos in the sheet still render cleanly
-    if (upper.includes('HACLB')) return 'HACLB';
-    if (upper.includes('HSB'))   return 'HSB';
-    return upper; // fall back to whatever was entered, uppercased
-  }
-
+  function parseCSV(text) { const rows = []; let row = [], field = '', inQuotes = false; for (let i = 0; i < text.length; i++) { const c = text[i]; if (inQuotes) { if (c === '"' && text[i+1] === '"') { field += '"'; i++; } else if (c === '"') { inQuotes = false; } else { field += c; } } else { if (c === '"') { inQuotes = true; } else if (c === ',') { row.push(field); field = ''; } else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; } else if (c === '\r') {} else { field += c; } } } if (field.length || row.length) { row.push(field); rows.push(row); } return rows.filter(r => r.some(cell => cell.trim() !== '')); }
+  function parseMonth(value) { const v = String(value).trim(); if (!v) return null; const n = parseInt(v, 10); if (!isNaN(n) && n >= 1 && n <= 12) return n; const lower = v.toLowerCase(); for (let i = 0; i < MONTHS.length; i++) { if (MONTHS[i].toLowerCase().startsWith(lower.slice(0,3))) return i + 1; } return null; }
+  function normalizeBureau(value) { const v = String(value || '').trim(); if (!v) return ''; const upper = v.toUpperCase(); if (upper.includes('HACLB')) return 'HACLB'; if (upper.includes('HSB')) return 'HSB'; return upper; }
   async function loadBirthdays() {
     const today = new Date();
     const currentMonth = today.getMonth() + 1;
     const currentDay = today.getDate();
     const currentYear = today.getFullYear();
-
     document.getElementById('month-label').textContent = MONTHS[currentMonth - 1];
     document.getElementById('year-label').textContent = currentYear;
-
-    if (!SHEET_CSV_URL || SHEET_CSV_URL.includes('PASTE_YOUR')) {
-      renderError("Google Sheet not configured yet 🎈<br><br><span style='font-size:0.6em;opacity:0.7;font-family:Quicksand;'>Edit the HTML file and set SHEET_CSV_URL</span>");
-      return;
-    }
-
+    if (!SHEET_CSV_URL || SHEET_CSV_URL.includes('PASTE_YOUR')) { renderError("Google Sheet not configured yet 🎈"); return; }
     try {
       let text;
-      try {
-        const res = await fetch(SHEET_CSV_URL, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Direct fetch failed: ' + res.status);
-        text = await res.text();
-      } catch (directErr) {
-        console.warn('Direct fetch failed, trying CORS proxy fallback:', directErr);
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(SHEET_CSV_URL);
-        const res = await fetch(proxyUrl, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Proxy fetch failed: ' + res.status);
-        text = await res.text();
-      }
+      try { const res = await fetch(SHEET_CSV_URL, { cache: 'no-store' }); if (!res.ok) throw new Error('Direct fetch failed: ' + res.status); text = await res.text(); }
+      catch (directErr) { const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(SHEET_CSV_URL); const res = await fetch(proxyUrl, { cache: 'no-store' }); if (!res.ok) throw new Error('Proxy fetch failed: ' + res.status); text = await res.text(); }
       const rows = parseCSV(text);
       if (rows.length < 2) throw new Error('No data rows found');
-
       const header = rows[0].map(h => h.trim().toLowerCase());
-      const nameIdx   = header.findIndex(h => h.includes('name'));
-      const monthIdx  = header.findIndex(h => h.includes('month'));
-      const dayIdx    = header.findIndex(h => h.includes('day'));
+      const nameIdx = header.findIndex(h => h.includes('name'));
+      const monthIdx = header.findIndex(h => h.includes('month'));
+      const dayIdx = header.findIndex(h => h.includes('day'));
       const bureauIdx = header.findIndex(h => h.includes('bureau'));
-
-      if (nameIdx === -1 || monthIdx === -1 || dayIdx === -1) {
-        throw new Error('Required columns missing. Need: Name, Month, Day');
-      }
-
+      if (nameIdx === -1 || monthIdx === -1 || dayIdx === -1) throw new Error('Required columns missing.');
       const entries = [];
       for (let i = 1; i < rows.length; i++) {
         const r = rows[i];
@@ -623,165 +151,100 @@
         const day = parseInt((r[dayIdx] || '').trim(), 10);
         const bureau = bureauIdx !== -1 ? normalizeBureau(r[bureauIdx]) : '';
         if (!name || !month || isNaN(day) || day < 1 || day > 31) continue;
-        if (month === currentMonth) {
-          entries.push({ name, month, day, bureau });
-        }
+        if (month === currentMonth) entries.push({ name, month, day, bureau });
       }
-
       entries.sort((a, b) => a.day - b.day);
       lastLoaded = { entries, currentMonth, currentDay };
       renderBirthdays(entries, currentMonth, currentDay);
-    } catch (err) {
-      console.error(err);
-      renderError("Couldn't load birthdays 🎈<br><br><span style='font-size:0.55em;opacity:0.7;font-family:Quicksand;'>Check that the Google Sheet is published as CSV</span>");
-    }
+    } catch (err) { console.error(err); renderError("Couldn't load birthdays 🎈"); }
   }
+  function renderError(msg) { document.getElementById('main').innerHTML = `<div class="state-message">${msg}</div>`; document.getElementById('count-text').textContent = '— celebrating this month'; }
 
-  function renderError(msg) {
-    document.getElementById('main').innerHTML =
-      `<div class="state-message">${msg}</div>`;
-    document.getElementById('count-text').textContent = '— celebrating this month';
+  // Sizing tiers, ordered LARGEST first. Fit-up algorithm picks the first
+  // that fits the available space. Generous top tiers so few-birthday
+  // months grow naturally; today card is only 1.15× wider so it doesn't
+  // singlehandedly trigger unnecessary downscaling.
+  const SIZE_TIERS = [
+    { cardW: 320, gap: 36, photoH: 200, nameFs: 3.8,  dayFs: 2.0  },
+    { cardW: 290, gap: 32, photoH: 185, nameFs: 3.4,  dayFs: 1.85 },
+    { cardW: 265, gap: 30, photoH: 170, nameFs: 3.1,  dayFs: 1.75 },
+    { cardW: 240, gap: 28, photoH: 155, nameFs: 2.8,  dayFs: 1.6  },
+    { cardW: 220, gap: 26, photoH: 140, nameFs: 2.55, dayFs: 1.5  },
+    { cardW: 200, gap: 22, photoH: 125, nameFs: 2.3,  dayFs: 1.4  },
+    { cardW: 180, gap: 20, photoH: 110, nameFs: 2.1,  dayFs: 1.3  },
+    { cardW: 165, gap: 18, photoH:  98, nameFs: 1.9,  dayFs: 1.2  },
+    { cardW: 150, gap: 16, photoH:  88, nameFs: 1.7,  dayFs: 1.1  },
+    { cardW: 138, gap: 14, photoH:  80, nameFs: 1.55, dayFs: 1.0  },
+  ];
+  function applyTier(tier) {
+    const root = document.documentElement;
+    root.style.setProperty('--card-w',       tier.cardW + 'px');
+    root.style.setProperty('--wall-gap',     tier.gap + 'px');
+    root.style.setProperty('--card-photo-h', tier.photoH + 'px');
+    root.style.setProperty('--card-name-fs', tier.nameFs + 'rem');
+    root.style.setProperty('--card-day-fs',  tier.dayFs + 'rem');
   }
-
   function renderBirthdays(entries, currentMonth, currentDay) {
     const countEl = document.getElementById('count-text');
-    if (entries.length === 0) {
-      countEl.textContent = '0 birthdays this month';
-      document.getElementById('main').innerHTML =
-        `<div class="state-message">No birthdays on the calendar this month ✨<br>but the party never stops! 🎈</div>`;
-      return;
-    }
-
-    countEl.textContent = entries.length === 1
-      ? '1 birthday this month'
-      : `${entries.length} birthdays this month`;
-
-    // Sizing strategy: pick a reasonable starting tier based on count,
-    // render the cards, then measure the actual rendered wall and scale
-    // it down with transform if it's larger than the available viewport.
-    // Variables: cardW, gap, photoH (color area height where name shows),
-    //   nameFs (focal name size, rem), dayFs (small day strip, rem)
-    const n = entries.length;
-    let cardW, gap, photoH, nameFs, dayFs;
-    if (n <= 3)       { cardW = 300; gap = 36; photoH = 185; nameFs = 3.6; dayFs = 1.9; }
-    else if (n <= 6)  { cardW = 270; gap = 32; photoH = 170; nameFs = 3.2; dayFs = 1.75; }
-    else if (n <= 9)  { cardW = 240; gap = 28; photoH = 150; nameFs = 2.8; dayFs = 1.6; }
-    else if (n <= 12) { cardW = 220; gap = 26; photoH = 135; nameFs = 2.5; dayFs = 1.45; }
-    else if (n <= 16) { cardW = 200; gap = 22; photoH = 120; nameFs = 2.3; dayFs = 1.35; }
-    else if (n <= 20) { cardW = 180; gap = 20; photoH = 108; nameFs = 2.0; dayFs = 1.2; }
-    else if (n <= 28) { cardW = 165; gap = 18; photoH =  98; nameFs = 1.8; dayFs = 1.1; }
-    else              { cardW = 150; gap = 16; photoH =  88; nameFs = 1.6; dayFs = 1.0; }
-
-    const root = document.documentElement;
-    root.style.setProperty('--card-w', cardW + 'px');
-    root.style.setProperty('--wall-gap', gap + 'px');
-    root.style.setProperty('--card-photo-h', photoH + 'px');
-    root.style.setProperty('--card-name-fs', nameFs + 'rem');
-    root.style.setProperty('--card-day-fs', dayFs + 'rem');
-
+    if (entries.length === 0) { countEl.textContent = '0 birthdays this month'; document.getElementById('main').innerHTML = `<div class="state-message">No birthdays on the calendar this month ✨<br>but the party never stops! 🎈</div>`; return; }
+    countEl.textContent = entries.length === 1 ? '1 birthday this month' : `${entries.length} birthdays this month`;
     let html = `<div class="card-wall">`;
     entries.forEach((e, i) => {
       const isToday = e.day === currentDay;
       const past = e.day < currentDay;
       const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
       const colorClass = 'c' + ((i % 6) + 1);
-      const tiltClass  = 't' + ((i % 6) + 1);
+      const tiltClass = 't' + ((i % 6) + 1);
       const classes = ['card', colorClass, tiltClass];
       if (isToday) classes.push('today');
       else if (past) classes.push('past');
-
       const ordinal = ordinalSuffix(e.day);
       html += `<div class="${classes.join(' ')}" style="animation-delay:${0.1 + i * 0.06}s">`;
       if (isToday) html += `<span class="today-ribbon">TODAY 🎂</span>`;
-      html += `
-        <div class="card-photo">
-          <span class="card-name">${escapeHtml(e.name)}</span>
-          <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
-        </div>
-        <div class="card-day-strip">
-          <span class="card-day-num">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
-        </div>
-        ${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}
-      `;
+      html += `<div class="card-photo"><span class="card-name">${escapeHtml(e.name)}</span><span class="card-emoji">${isToday ? '🎂' : emoji}</span></div><div class="card-day-strip"><span class="card-day-num">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span></div>${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}`;
       html += `</div>`;
     });
     html += `</div>`;
-
     document.getElementById('main').innerHTML = html;
-
-    // Measure the rendered wall and, if it's bigger than the available space,
-    // scale it down visually AND shrink its layout box to match — so the
-    // parent flex container's centering uses the scaled size. This keeps
-    // the cards dead-center on any screen resolution.
+    fitUp();
+  }
+  function fitUp() {
+    const mainEl = document.getElementById('main');
+    const wall = mainEl.querySelector('.card-wall');
+    if (!wall) return;
+    wall.style.transform = ''; wall.style.width = ''; wall.style.height = ''; wall.style.margin = '';
+    wall.style.transformOrigin = 'center center';
+    const PAD_X = 90, PAD_Y = 75;
+    const availW = mainEl.clientWidth - PAD_X * 2;
+    const availH = mainEl.clientHeight - PAD_Y * 2;
+    let chosenTier = SIZE_TIERS[SIZE_TIERS.length - 1];
+    for (const tier of SIZE_TIERS) {
+      applyTier(tier);
+      wall.offsetHeight; // force layout
+      if (wall.scrollWidth <= availW && wall.scrollHeight <= availH) { chosenTier = tier; break; }
+    }
+    applyTier(chosenTier);
     requestAnimationFrame(() => {
-      const mainEl = document.getElementById('main');
-      const wall   = mainEl.querySelector('.card-wall');
-      if (!wall) return;
-
-      // Reset prior styling so we measure true intrinsic dimensions
-      wall.style.transform = '';
-      wall.style.width     = '';
-      wall.style.height    = '';
-      wall.style.margin    = '';
-      wall.style.transformOrigin = 'center center';
-
-      const GLOW_PAD = 75; // reserved margin so today-glow never clips
-      const availW = mainEl.clientWidth  - GLOW_PAD * 2;
-      const availH = mainEl.clientHeight - GLOW_PAD * 2;
-
-      // Force layout flush so measurements are accurate
-      const wallW = wall.scrollWidth;
-      const wallH = wall.scrollHeight;
-      if (wallW <= 0 || wallH <= 0) return;
-
-      const scale = Math.min(1, availW / wallW, availH / wallH);
-      if (scale < 1) {
-        // Pin intrinsic size, then use negative margins to shrink the
-        // layout footprint to match the scaled size. This way the parent
-        // flex container centers the scaled visual, not the pre-scale box.
-        wall.style.width  = wallW + 'px';
-        wall.style.height = wallH + 'px';
-        wall.style.marginLeft   = `${-(wallW - wallW*scale)/2}px`;
-        wall.style.marginRight  = `${-(wallW - wallW*scale)/2}px`;
-        wall.style.marginTop    = `${-(wallH - wallH*scale)/2}px`;
-        wall.style.marginBottom = `${-(wallH - wallH*scale)/2}px`;
+      wall.offsetHeight;
+      const w = wall.scrollWidth, h = wall.scrollHeight;
+      if (w > availW || h > availH) {
+        const scale = Math.min(availW / w, availH / h);
+        wall.style.width = w + 'px'; wall.style.height = h + 'px';
+        wall.style.marginLeft = `${-(w - w*scale)/2}px`;
+        wall.style.marginRight = `${-(w - w*scale)/2}px`;
+        wall.style.marginTop = `${-(h - h*scale)/2}px`;
+        wall.style.marginBottom = `${-(h - h*scale)/2}px`;
         wall.style.transform = `scale(${scale})`;
       }
     });
   }
-
-  function ordinalSuffix(n) {
-    const s = ['th','st','nd','rd'];
-    const v = n % 100;
-    return s[(v-20) % 10] || s[v] || s[0];
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[c]));
-  }
-
+  function ordinalSuffix(n) { const s = ['th','st','nd','rd']; const v = n % 100; return s[(v-20) % 10] || s[v] || s[0]; }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   loadBirthdays();
   setInterval(loadBirthdays, REFRESH_HOURS * 60 * 60 * 1000);
-
-  // Re-render on resize so the sizing stays correct if viewport changes
   let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (lastLoaded) {
-        renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay);
-      }
-    }, 200);
-  });
-
-  (function scheduleMidnightRefresh() {
-    const now = new Date();
-    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 30);
-    const ms = tomorrow - now;
-    setTimeout(() => { location.reload(); }, ms);
-  })();
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (lastLoaded) renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay); }, 200); });
+  (function scheduleMidnightRefresh() { const now = new Date(); const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 30); const ms = tomorrow - now; setTimeout(() => { location.reload(); }, ms); })();
 </script>
 </body>
 </html>
