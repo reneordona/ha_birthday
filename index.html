@@ -18,25 +18,35 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; }
-
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #1a4a75;
+  }
   body {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(var(--canvas-scale, 1));
+    transform-origin: center center;
     background:
       radial-gradient(ellipse at top right, rgba(255,110,199,0.22), transparent 55%),
       radial-gradient(ellipse at bottom left, rgba(255,217,61,0.18), transparent 55%),
       linear-gradient(135deg, #236092 0%, #1a4a75 50%, #2d7bb8 100%);
     color: var(--text);
     font-family: 'Quicksand', sans-serif;
-    min-height: 100vh;
-    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 20px 50px 20px;
+    padding: 26px 56px;
   }
 
   /* ===== Confetti ===== */
   .confetti {
-    position: fixed;
+    position: absolute;
     top: -20px;
     width: 10px;
     height: 14px;
@@ -47,12 +57,12 @@
   }
   @keyframes fall {
     0% { transform: translateY(-20px) rotate(0deg); }
-    100% { transform: translateY(110vh) rotate(720deg); }
+    100% { transform: translateY(780px) rotate(720deg); }
   }
 
   /* ===== Balloons ===== */
   .balloon {
-    position: fixed;
+    position: absolute;
     bottom: -200px;
     width: 60px;
     height: 75px;
@@ -86,8 +96,8 @@
   }
   @keyframes float-up {
     0%   { transform: translateY(0) translateX(0); }
-    50%  { transform: translateY(-50vh) translateX(20px); }
-    100% { transform: translateY(-110vh) translateX(-10px); }
+    50%  { transform: translateY(-360px) translateX(20px); }
+    100% { transform: translateY(-800px) translateX(-10px); }
   }
 
   /* ===== Header ===== */
@@ -106,7 +116,7 @@
 
   .eyebrow {
     font-family: 'Fredoka', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -114,7 +124,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .eyebrow .dot {
     width: 8px; height: 8px;
@@ -125,7 +135,7 @@
 
   .big-month {
     font-family: 'Caveat', cursive;
-    font-size: 5.8rem;
+    font-size: 2.6rem;
     font-weight: 700;
     color: #fff;
     text-shadow: 0 4px 24px rgba(0,0,0,0.25);
@@ -147,9 +157,9 @@
   .year-pill {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     letter-spacing: 0.25em;
-    padding: 8px 18px;
+    padding: 6px 14px;
     border-radius: 999px;
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
@@ -158,12 +168,12 @@
   .count-pill {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     letter-spacing: 0.05em;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 999px;
     background: linear-gradient(135deg, var(--pink), var(--coral));
-    box-shadow: 0 6px 20px rgba(255,110,199,0.4);
+    box-shadow: 0 5px 16px rgba(255,110,199,0.4);
     color: #fff;
   }
   .count-pill .wiggle {
@@ -190,15 +200,21 @@
 
   .card-wall {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: var(--wall-gap, 28px) var(--wall-gap, 24px);
-    padding: 20px 30px;
+    justify-content: center;
+    gap: var(--wall-gap, 22px);
+    padding: 0;
     overflow: visible;
-    max-width: 100%;
-    transform-origin: center center;
+    width: 100%;
+  }
+
+  .card-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wall-gap, 22px);
   }
 
   .card {
@@ -281,8 +297,11 @@
     text-shadow: 0 3px 12px rgba(0,0,0,0.28);
     position: relative;
     z-index: 1;
-    word-break: break-word;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
     padding: 0 4px;
+    max-width: 100%;
   }
   .card-emoji {
     position: absolute;
@@ -345,7 +364,7 @@
   /* ---- TODAY card: spotlight, glow, wider (same height as others) ---- */
   .card.today {
     --tilt: -1deg;
-    width: calc(var(--card-w, 240px) * 1.35);
+    width: calc(var(--card-w, 240px) * 1.30);
     /* padding kept same as regular cards so total height matches */
     background: linear-gradient(180deg, #fff 0%, #fff7e6 100%);
     box-shadow:
@@ -643,6 +662,53 @@
     document.getElementById('count-text').textContent = '— celebrating this month';
   }
 
+  // Per-card-count layouts — hand-tuned for the 1280×720 fixed canvas.
+  // `rows` defines how cards are distributed into balanced rows (no orphan
+  // single-card rows). Card dimensions are sized so the row containing today
+  // (1.30× wider) still fits horizontally.
+  const LAYOUTS = {
+     1: { rows: [1],            cardW: 260, gap: 24, photoH: 175, nameFs: 3.1, dayFs: 1.65 },
+     2: { rows: [2],            cardW: 235, gap: 24, photoH: 158, nameFs: 2.9, dayFs: 1.5 },
+     3: { rows: [3],            cardW: 205, gap: 22, photoH: 138, nameFs: 2.55, dayFs: 1.4 },
+     4: { rows: [4],            cardW: 182, gap: 20, photoH: 122, nameFs: 2.3, dayFs: 1.3 },
+     5: { rows: [3, 2],         cardW: 190, gap: 20, photoH: 128, nameFs: 2.35, dayFs: 1.35 },
+     6: { rows: [3, 3],         cardW: 182, gap: 18, photoH: 122, nameFs: 2.3, dayFs: 1.3 },
+     7: { rows: [4, 3],         cardW: 168, gap: 16, photoH: 110, nameFs: 2.1, dayFs: 1.2 },
+     8: { rows: [4, 4],         cardW: 162, gap: 16, photoH: 106, nameFs: 2.05, dayFs: 1.15 },
+     9: { rows: [5, 4],         cardW: 152, gap: 14, photoH:  98, nameFs: 1.9, dayFs: 1.1 },
+    10: { rows: [5, 5],         cardW: 152, gap: 14, photoH:  98, nameFs: 1.9, dayFs: 1.1 },
+    11: { rows: [4, 4, 3],      cardW: 148, gap: 12, photoH:  66, nameFs: 1.6, dayFs: 1.0 },
+    12: { rows: [4, 4, 4],      cardW: 148, gap: 12, photoH:  66, nameFs: 1.6, dayFs: 1.0 },
+    13: { rows: [5, 4, 4],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
+    14: { rows: [5, 5, 4],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
+    15: { rows: [5, 5, 5],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
+    16: { rows: [4, 4, 4, 4],   cardW: 134, gap: 10, photoH:  52, nameFs: 1.4, dayFs: 0.88 },
+    17: { rows: [5, 4, 4, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
+    18: { rows: [5, 5, 4, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
+    19: { rows: [5, 5, 5, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
+    20: { rows: [5, 5, 5, 5],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
+  };
+
+  function planLayout(n) {
+    if (LAYOUTS[n]) return LAYOUTS[n];
+    // Fallback for n > 20: 5 per row, smallest tier
+    const k = Math.ceil(n / 5);
+    const base = Math.floor(n / k);
+    const extras = n % k;
+    const rows = [];
+    for (let i = 0; i < k; i++) rows.push(base + (i < extras ? 1 : 0));
+    return { rows, cardW: 138, gap: 12, photoH: 48, nameFs: 1.35, dayFs: 0.9 };
+  }
+
+  function applyLayout(layout) {
+    const root = document.documentElement;
+    root.style.setProperty('--card-w', layout.cardW + 'px');
+    root.style.setProperty('--wall-gap', layout.gap + 'px');
+    root.style.setProperty('--card-photo-h', layout.photoH + 'px');
+    root.style.setProperty('--card-name-fs', layout.nameFs + 'rem');
+    root.style.setProperty('--card-day-fs', layout.dayFs + 'rem');
+  }
+
   function renderBirthdays(entries, currentMonth, currentDay) {
     const countEl = document.getElementById('count-text');
     if (entries.length === 0) {
@@ -656,98 +722,112 @@
       ? '1 birthday this month'
       : `${entries.length} birthdays this month`;
 
-    // Sizing strategy: pick a reasonable starting tier based on count,
-    // render the cards, then measure the actual rendered wall and scale
-    // it down with transform if it's larger than the available viewport.
-    // Variables: cardW, gap, photoH (color area height where name shows),
-    //   nameFs (focal name size, rem), dayFs (small day strip, rem)
-    const n = entries.length;
-    let cardW, gap, photoH, nameFs, dayFs;
-    if (n <= 3)       { cardW = 300; gap = 36; photoH = 185; nameFs = 3.6; dayFs = 1.9; }
-    else if (n <= 6)  { cardW = 260; gap = 30; photoH = 165; nameFs = 3.0; dayFs = 1.7; }
-    else if (n <= 9)  { cardW = 220; gap = 26; photoH = 140; nameFs = 2.6; dayFs = 1.5; }
-    else if (n <= 12) { cardW = 205; gap = 24; photoH = 128; nameFs = 2.4; dayFs = 1.4; }
-    else if (n <= 16) { cardW = 188; gap = 22; photoH = 116; nameFs = 2.2; dayFs = 1.3; }
-    else if (n <= 20) { cardW = 172; gap = 20; photoH = 104; nameFs = 2.0; dayFs = 1.2; }
-    else if (n <= 28) { cardW = 158; gap = 18; photoH =  94; nameFs = 1.8; dayFs = 1.1; }
-    else              { cardW = 144; gap = 16; photoH =  84; nameFs = 1.6; dayFs = 1.0; }
+    const layout = planLayout(entries.length);
+    applyLayout(layout);
 
-    const root = document.documentElement;
-    root.style.setProperty('--card-w', cardW + 'px');
-    root.style.setProperty('--wall-gap', gap + 'px');
-    root.style.setProperty('--card-photo-h', photoH + 'px');
-    root.style.setProperty('--card-name-fs', nameFs + 'rem');
-    root.style.setProperty('--card-day-fs', dayFs + 'rem');
-
+    // Build explicit row containers — each row is its own flex container
+    // with a known number of cards, so flex-wrap unpredictability is gone.
     let html = `<div class="card-wall">`;
-    entries.forEach((e, i) => {
-      const isToday = e.day === currentDay;
-      const past = e.day < currentDay;
-      const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
-      const colorClass = 'c' + ((i % 6) + 1);
-      const tiltClass  = 't' + ((i % 6) + 1);
-      const classes = ['card', colorClass, tiltClass];
-      if (isToday) classes.push('today');
-      else if (past) classes.push('past');
+    let cursor = 0;
+    layout.rows.forEach(rowSize => {
+      html += `<div class="card-row">`;
+      for (let r = 0; r < rowSize; r++) {
+        const e = entries[cursor];
+        const i = cursor;
+        const isToday = e.day === currentDay;
+        const past = e.day < currentDay;
+        const emoji = BIRTHDAY_EMOJIS[i % BIRTHDAY_EMOJIS.length];
+        const colorClass = 'c' + ((i % 6) + 1);
+        const tiltClass  = 't' + ((i % 6) + 1);
+        const classes = ['card', colorClass, tiltClass];
+        if (isToday) classes.push('today');
+        else if (past) classes.push('past');
 
-      const ordinal = ordinalSuffix(e.day);
-      html += `<div class="${classes.join(' ')}" style="animation-delay:${0.1 + i * 0.06}s">`;
-      if (isToday) html += `<span class="today-ribbon">TODAY 🎂</span>`;
-      html += `
-        <div class="card-photo">
-          <span class="card-name">${escapeHtml(e.name)}</span>
-          <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
-        </div>
-        <div class="card-day-strip">
-          <span class="card-day-num">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
-        </div>
-        ${e.bureau ? `<div class="card-bureau">${escapeHtml(e.bureau)}</div>` : ''}
-      `;
+        const ordinal = ordinalSuffix(e.day);
+        html += `<div class="${classes.join(' ')}" style="animation-delay:${0.1 + i * 0.06}s">`;
+        if (isToday) html += `<span class="today-ribbon">TODAY 🎂</span>`;
+        html += `
+          <div class="card-photo">
+            <span class="card-name">${escapeHtml(e.name)}</span>
+            <span class="card-emoji">${isToday ? '🎂' : emoji}</span>
+          </div>
+          <div class="card-day-strip">
+            <span class="card-day-num">${MONTHS_ABBR[currentMonth-1]} ${e.day}${ordinal}</span>
+          </div>
+          <div class="card-bureau">${e.bureau ? escapeHtml(e.bureau) : '&nbsp;'}</div>
+        `;
+        html += `</div>`;
+        cursor++;
+      }
       html += `</div>`;
     });
     html += `</div>`;
 
     document.getElementById('main').innerHTML = html;
 
-    // Measure the rendered wall and, if it's bigger than the available space,
-    // scale it down visually AND shrink its layout box to match — so the
-    // parent flex container's centering uses the scaled size. This keeps
-    // the cards dead-center on any screen resolution.
-    requestAnimationFrame(() => {
-      const mainEl = document.getElementById('main');
-      const wall   = mainEl.querySelector('.card-wall');
-      if (!wall) return;
+    // Find ONE shared font size that works for all cards: the largest size
+    // at which the widest word in any name still fits within a regular
+    // card's photo width. This keeps text consistent across every card
+    // while preventing mid-word breaks.
+    requestAnimationFrame(() => fitAllNames(layout.nameFs));
+  }
 
-      // Reset prior styling so we measure true intrinsic dimensions
-      wall.style.transform = '';
-      wall.style.width     = '';
-      wall.style.height    = '';
-      wall.style.margin    = '';
-      wall.style.transformOrigin = 'center center';
+  function fitAllNames(designedFsRem) {
+    const cards = document.querySelectorAll('.card');
+    if (cards.length === 0) return;
 
-      const GLOW_PAD = 45; // reserved margin so today-glow never clips
-      const availW = mainEl.clientWidth  - GLOW_PAD * 2;
-      const availH = mainEl.clientHeight - GLOW_PAD * 2;
+    // Use a REGULAR (non-today) card as the width reference; today is wider
+    // and will accommodate the same shared size via CSS calc(* 1.15).
+    let regCard = document.querySelector('.card:not(.today)');
+    if (!regCard) regCard = cards[0];
 
-      // Force layout flush so measurements are accurate
-      const wallW = wall.scrollWidth;
-      const wallH = wall.scrollHeight;
-      if (wallW <= 0 || wallH <= 0) return;
+    const photoEl = regCard.querySelector('.card-photo');
+    if (!photoEl) return;
+    const ps = getComputedStyle(photoEl);
+    const padL = parseFloat(ps.paddingLeft)  || 0;
+    const padR = parseFloat(ps.paddingRight) || 0;
+    // Subtract a small safety buffer so text doesn't hug the edges
+    const targetWidth = photoEl.clientWidth - padL - padR - 4;
 
-      const scale = Math.min(1, availW / wallW, availH / wallH);
-      if (scale < 1) {
-        // Pin intrinsic size, then use negative margins to shrink the
-        // layout footprint to match the scaled size. This way the parent
-        // flex container centers the scaled visual, not the pre-scale box.
-        wall.style.width  = wallW + 'px';
-        wall.style.height = wallH + 'px';
-        wall.style.marginLeft   = `${-(wallW - wallW*scale)/2}px`;
-        wall.style.marginRight  = `${-(wallW - wallW*scale)/2}px`;
-        wall.style.marginTop    = `${-(wallH - wallH*scale)/2}px`;
-        wall.style.marginBottom = `${-(wallH - wallH*scale)/2}px`;
-        wall.style.transform = `scale(${scale})`;
-      }
+    // Collect every individual word across all names
+    const allWords = new Set();
+    cards.forEach(card => {
+      const text = card.querySelector('.card-name').textContent.trim();
+      text.split(/\s+/).forEach(w => { if (w) allWords.add(w); });
     });
+    if (allWords.size === 0) return;
+
+    // Off-screen probe used to measure word widths at varying font sizes
+    const probe = document.createElement('span');
+    probe.style.cssText =
+      "font-family:'Caveat',cursive;font-weight:700;" +
+      "position:absolute;visibility:hidden;white-space:nowrap;left:-9999px;top:-9999px;";
+    document.body.appendChild(probe);
+
+    function widestWordPx(fsPx) {
+      probe.style.fontSize = fsPx + 'px';
+      let maxW = 0;
+      allWords.forEach(w => {
+        probe.textContent = w;
+        if (probe.scrollWidth > maxW) maxW = probe.scrollWidth;
+      });
+      return maxW;
+    }
+
+    // Designed size from the LAYOUTS table (in rem); base 16px
+    const startFsPx = designedFsRem * 16;
+    const floorFsPx = startFsPx * 0.5;
+    let fs = startFsPx;
+
+    while (widestWordPx(fs) > targetWidth && fs > floorFsPx) {
+      fs -= 1;
+    }
+
+    document.body.removeChild(probe);
+
+    // Apply via the CSS variable. Today card uses calc(* 1.15) so it
+    // inherits the same proportional shift automatically.
+    document.documentElement.style.setProperty('--card-name-fs', (fs / 16) + 'rem');
   }
 
   function ordinalSuffix(n) {
@@ -762,20 +842,37 @@
     }[c]));
   }
 
-  loadBirthdays();
-  setInterval(loadBirthdays, REFRESH_HOURS * 60 * 60 * 1000);
+  // ============================================================
+  // CANVAS SCALE — fits the 1280×720 design to any viewport size
+  // ============================================================
+  function updateCanvasScale() {
+    const sx = window.innerWidth  / 1280;
+    const sy = window.innerHeight /  720;
+    const scale = Math.min(sx, sy);
+    document.documentElement.style.setProperty('--canvas-scale', scale);
+  }
+  updateCanvasScale();
+  window.addEventListener('resize', updateCanvasScale);
 
-  // Re-render on resize so the sizing stays correct if viewport changes
-  let resizeTimer;
+  // Re-fit names if the viewport changes (cards keep their layout box but
+  // text measurement results can drift slightly between scale factors)
+  let _resizeTimer;
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
       if (lastLoaded) {
         renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay);
       }
     }, 200);
   });
 
+  // ============================================================
+  // LIVE MODE — load birthdays from the published Google Sheet
+  // ============================================================
+  loadBirthdays();
+  setInterval(loadBirthdays, REFRESH_HOURS * 60 * 60 * 1000);
+
+  // Auto-reload at midnight so "today" advances without manual refresh
   (function scheduleMidnightRefresh() {
     const now = new Date();
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 30);
