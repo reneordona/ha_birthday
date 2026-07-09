@@ -854,20 +854,7 @@
   updateCanvasScale();
   window.addEventListener('resize', updateCanvasScale);
 
-  // Re-fit names if the viewport changes (cards keep their layout box but
-  // text measurement results can drift slightly between scale factors)
-  let _resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(_resizeTimer);
-    _resizeTimer = setTimeout(() => {
-      if (lastLoaded) {
-        renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay);
-      }
-    }, 200);
-  });
-
-  // Re-fit names if the viewport changes (cards keep their layout box but
-  // text measurement results can drift slightly between scale factors)
+  // Re-render if the viewport changes so name-sizing measurements re-run
   let _resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(_resizeTimer);
