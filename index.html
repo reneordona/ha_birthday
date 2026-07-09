@@ -228,7 +228,7 @@
     --accent: var(--pink);
     background: #fff;
     border-radius: 10px;
-    padding: 14px 14px 16px;
+    padding: 10px 12px 12px;
     box-shadow:
       0 12px 28px rgba(0,0,0,0.28),
       0 4px 8px rgba(0,0,0,0.18);
@@ -239,7 +239,7 @@
     animation: popIn 0.55s ease-out forwards;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
   @keyframes popIn {
     from { opacity: 0; transform: rotate(var(--tilt)) scale(0.85) translateY(14px); }
@@ -307,7 +307,7 @@
     position: absolute;
     bottom: 8px;
     right: 10px;
-    font-size: 1rem;
+    font-size: 1.5rem;
     z-index: 1;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
   }
@@ -318,7 +318,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 2px 6px 4px;
+    padding: 0 6px;
   }
   .card-day-num {
     font-family: 'Fredoka', sans-serif;
@@ -407,15 +407,15 @@
 
   .today-ribbon {
     position: absolute;
-    top: 14px;
+    top: -8px;
     right: -10px;
     background: linear-gradient(135deg, #ff6ec7, #ff8e6b);
     color: #fff;
     font-family: 'Fredoka', sans-serif;
     font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    padding: 7px 18px 7px 14px;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    padding: 5px 14px 5px 12px;
     border-radius: 4px 0 0 4px;
     box-shadow: 0 6px 16px rgba(255,110,199,0.5);
     z-index: 3;
@@ -667,26 +667,26 @@
   // single-card rows). Card dimensions are sized so the row containing today
   // (1.30× wider) still fits horizontally.
   const LAYOUTS = {
-     1: { rows: [1],            cardW: 260, gap: 24, photoH: 175, nameFs: 3.1, dayFs: 1.65 },
-     2: { rows: [2],            cardW: 235, gap: 24, photoH: 158, nameFs: 2.9, dayFs: 1.5 },
-     3: { rows: [3],            cardW: 205, gap: 22, photoH: 138, nameFs: 2.55, dayFs: 1.4 },
-     4: { rows: [4],            cardW: 182, gap: 20, photoH: 122, nameFs: 2.3, dayFs: 1.3 },
-     5: { rows: [3, 2],         cardW: 190, gap: 20, photoH: 128, nameFs: 2.35, dayFs: 1.35 },
-     6: { rows: [3, 3],         cardW: 182, gap: 18, photoH: 122, nameFs: 2.3, dayFs: 1.3 },
-     7: { rows: [4, 3],         cardW: 168, gap: 16, photoH: 110, nameFs: 2.1, dayFs: 1.2 },
-     8: { rows: [4, 4],         cardW: 162, gap: 16, photoH: 106, nameFs: 2.05, dayFs: 1.15 },
-     9: { rows: [5, 4],         cardW: 152, gap: 14, photoH:  98, nameFs: 1.9, dayFs: 1.1 },
-    10: { rows: [5, 5],         cardW: 152, gap: 14, photoH:  98, nameFs: 1.9, dayFs: 1.1 },
-    11: { rows: [4, 4, 3],      cardW: 148, gap: 12, photoH:  66, nameFs: 1.6, dayFs: 1.0 },
-    12: { rows: [4, 4, 4],      cardW: 148, gap: 12, photoH:  66, nameFs: 1.6, dayFs: 1.0 },
-    13: { rows: [5, 4, 4],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
-    14: { rows: [5, 5, 4],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
-    15: { rows: [5, 5, 5],      cardW: 144, gap: 12, photoH:  64, nameFs: 1.55, dayFs: 0.95 },
-    16: { rows: [4, 4, 4, 4],   cardW: 134, gap: 10, photoH:  52, nameFs: 1.4, dayFs: 0.88 },
-    17: { rows: [5, 4, 4, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
-    18: { rows: [5, 5, 4, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
-    19: { rows: [5, 5, 5, 4],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
-    20: { rows: [5, 5, 5, 5],   cardW: 132, gap: 10, photoH:  50, nameFs: 1.38, dayFs: 0.85 },
+     1: { rows: [1],            cardW: 280, gap: 24, photoH: 180, nameFs: 3.1, dayFs: 1.55 },
+     2: { rows: [2],            cardW: 250, gap: 22, photoH: 170, nameFs: 2.9, dayFs: 1.45 },
+     3: { rows: [3],            cardW: 220, gap: 20, photoH: 158, nameFs: 2.7, dayFs: 1.35 },
+     4: { rows: [4],            cardW: 200, gap: 18, photoH: 145, nameFs: 2.5, dayFs: 1.25 },
+     5: { rows: [3, 2],         cardW: 205, gap: 18, photoH: 148, nameFs: 2.55, dayFs: 1.28 },
+     6: { rows: [3, 3],         cardW: 200, gap: 18, photoH: 145, nameFs: 2.5, dayFs: 1.25 },
+     7: { rows: [4, 3],         cardW: 180, gap: 16, photoH: 130, nameFs: 2.3, dayFs: 1.15 },
+     8: { rows: [4, 4],         cardW: 175, gap: 16, photoH: 128, nameFs: 2.25, dayFs: 1.12 },
+     9: { rows: [5, 4],         cardW: 168, gap: 14, photoH: 130, nameFs: 2.15, dayFs: 1.08 },
+    10: { rows: [5, 5],         cardW: 168, gap: 14, photoH: 130, nameFs: 2.15, dayFs: 1.08 },
+    11: { rows: [6, 5],         cardW: 165, gap: 12, photoH: 128, nameFs: 2.1, dayFs: 1.05 },
+    12: { rows: [6, 6],         cardW: 165, gap: 12, photoH: 128, nameFs: 2.1, dayFs: 1.05 },
+    13: { rows: [5, 4, 4],      cardW: 160, gap: 12, photoH:  95, nameFs: 1.95, dayFs: 1.0 },
+    14: { rows: [5, 5, 4],      cardW: 160, gap: 12, photoH:  95, nameFs: 1.95, dayFs: 1.0 },
+    15: { rows: [5, 5, 5],      cardW: 160, gap: 12, photoH:  95, nameFs: 1.95, dayFs: 1.0 },
+    16: { rows: [4, 4, 4, 4],   cardW: 150, gap: 10, photoH:  70, nameFs: 1.7, dayFs: 0.9 },
+    17: { rows: [5, 4, 4, 4],   cardW: 148, gap: 10, photoH:  68, nameFs: 1.65, dayFs: 0.88 },
+    18: { rows: [5, 5, 4, 4],   cardW: 148, gap: 10, photoH:  68, nameFs: 1.65, dayFs: 0.88 },
+    19: { rows: [5, 5, 5, 4],   cardW: 148, gap: 10, photoH:  68, nameFs: 1.65, dayFs: 0.88 },
+    20: { rows: [5, 5, 5, 5],   cardW: 148, gap: 10, photoH:  68, nameFs: 1.65, dayFs: 0.88 },
   };
 
   function planLayout(n) {
@@ -853,6 +853,18 @@
   }
   updateCanvasScale();
   window.addEventListener('resize', updateCanvasScale);
+
+  // Re-fit names if the viewport changes (cards keep their layout box but
+  // text measurement results can drift slightly between scale factors)
+  let _resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      if (lastLoaded) {
+        renderBirthdays(lastLoaded.entries, lastLoaded.currentMonth, lastLoaded.currentDay);
+      }
+    }, 200);
+  });
 
   // Re-fit names if the viewport changes (cards keep their layout box but
   // text measurement results can drift slightly between scale factors)
